@@ -6,10 +6,15 @@ const { signUserToken, requireAuth } = require('../middleware/auth');
 
 // Register Endpoint
 router.post('/register', (req, res) => {
-    const { username, password, parent_pin } = req.body;
+    const { username, password, parent_pin, invite_code } = req.body;
 
     if (!username || !password) {
         return res.status(400).json({ error: 'Username and password are required.' });
+    }
+
+    const requiredCode = process.env.REGISTRATION_CODE;
+    if (requiredCode && invite_code !== requiredCode) {
+        return res.status(403).json({ error: 'Invalid invite code.' });
     }
 
     const password_hash = bcrypt.hashSync(password, 10);

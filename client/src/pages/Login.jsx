@@ -8,6 +8,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [parentPin, setParentPin] = useState('');
+  const [inviteCode, setInviteCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -24,7 +25,7 @@ const Login = () => {
     const res = await fetch('/api/v1/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password, parent_pin: parentPin || undefined }),
+      body: JSON.stringify({ username, password, parent_pin: parentPin || undefined, invite_code: inviteCode || undefined }),
     });
     return res;
   };
@@ -118,6 +119,19 @@ const Login = () => {
             />
           </div>
 
+          <div className="relative">
+            <Sparkles className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400" size={22} />
+            <input
+              type="text"
+              value={inviteCode}
+              onChange={(e) => setInviteCode(e.target.value)}
+              placeholder="초대 코드 (처음 만드는 계정만)"
+              className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-amber-100 text-lg focus:border-amber-400 outline-none"
+              autoComplete="off"
+              disabled={loading}
+            />
+          </div>
+
           <button
             type="submit"
             className="bg-pink-500 text-white py-4 rounded-xl font-bold text-xl hover:bg-pink-600 transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
@@ -135,7 +149,7 @@ const Login = () => {
         )}
 
         <div className="mt-6 text-xs text-gray-400 font-body">
-          처음 로그인하면 자동으로 계정이 만들어져요.
+          처음 로그인하면 자동으로 계정이 만들어져요. (새 계정은 초대 코드 필요)
         </div>
       </div>
     </div>
