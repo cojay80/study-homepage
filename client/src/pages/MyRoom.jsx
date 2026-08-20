@@ -57,6 +57,7 @@ const MyRoom = () => {
   const [placedItems, setPlacedItems] = useState([]);
   const [wallpaperId, setWallpaperId] = useState(null);
   const [avatarId, setAvatarId] = useState(null);
+  const [avatarPos, setAvatarPos] = useState(null); // { x, y } in room coordinates, like placedItems
   const [equippedIds, setEquippedIds] = useState([]);
   const [dragInventoryItemId, setDragInventoryItemId] = useState(null);
   const [draggingPlaced, setDraggingPlaced] = useState(null); // { id, offsetX, offsetY, startX, startY }
@@ -133,6 +134,7 @@ const MyRoom = () => {
       placedItems,
       wallpaperId,
       avatarId,
+      avatarPos,
       equippedIds,
       ...overrides,
     };
@@ -147,6 +149,7 @@ const MyRoom = () => {
         if (Array.isArray(parsed?.placedItems)) setPlacedItems(parsed.placedItems);
         if (typeof parsed?.wallpaperId === 'string') setWallpaperId(parsed.wallpaperId);
         if (typeof parsed?.avatarId === 'string') setAvatarId(parsed.avatarId);
+        if (parsed?.avatarPos && typeof parsed.avatarPos.x === 'number') setAvatarPos(parsed.avatarPos);
         if (Array.isArray(parsed?.equippedIds)) setEquippedIds(parsed.equippedIds);
       } catch {
         // ignore
@@ -212,6 +215,16 @@ const MyRoom = () => {
     }
   }, [trayCategories, trayCategory]);
 
+  // Give the avatar a starting spot (center-bottom) the first time one is picked,
+  // or for rooms saved before avatars were draggable.
+  useEffect(() => {
+    if (!avatarId || avatarPos) return;
+    const room = roomRef.current;
+    if (!room) return;
+    const rect = room.getBoundingClientRect();
+    setAvatarPos({ x: rect.width / 2 - 64, y: rect.height * 0.6 });
+  }, [avatarId, avatarPos]);
+
   useEffect(() => {
     if (!draggingPlaced) return;
 
@@ -226,11 +239,18 @@ const MyRoom = () => {
       const dy = e.clientY - draggingPlaced.startY;
       if (Math.abs(dx) > 6 || Math.abs(dy) > 6) dragMovedRef.current = true;
 
-      setPlacedItems((prev) => prev.map((p) => (p.id === draggingPlaced.id ? { ...p, x, y } : p)));
+      if (draggingPlaced.id === 'avatar') {
+        setAvatarPos({ x, y });
+      } else {
+        setPlacedItems((prev) => prev.map((p) => (p.id === draggingPlaced.id ? { ...p, x, y } : p)));
+      }
     };
 
     const handleUp = () => {
-      if (!dragMovedRef.current) triggerItemReaction(draggingPlaced.id);
+      if (!dragMovedRef.current) {
+        if (draggingPlaced.id === 'avatar') triggerAvatarReaction();
+        else triggerItemReaction(draggingPlaced.id);
+      }
       setDraggingPlaced(null);
     };
 
@@ -381,17 +401,27 @@ const MyRoom = () => {
         {/* Wall/floor seam shadow */}
         <div className="absolute inset-x-0" style={{ top: '72%', height: 10, background: 'linear-gradient(180deg, rgba(0,0,0,0.15), transparent)' }} />
 
-        {/* Avatar */}
-        {avatarItem && (
-          <div className="absolute z-10" style={{ left: '50%', bottom: '16%', transform: 'translateX(-50%)' }}>
+        {/* Avatar (draggable, like placed items) */}
+        {avatarItem && avatarPos && (
+          <div className="absolute z-10 select-none" style={{ left: avatarPos.x, top: avatarPos.y }}>
             <div className="relative flex flex-col items-center">
-              <button
-                onClick={triggerAvatarReaction}
-                className="animate-avatar-idle cursor-pointer"
+              <div
+                onPointerDown={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  dragMovedRef.current = false;
+                  setDraggingPlaced({
+                    id: 'avatar',
+                    offsetX: e.clientX - rect.left,
+                    offsetY: e.clientY - rect.top,
+                    startX: e.clientX,
+                    startY: e.clientY,
+                  });
+                }}
+                className="animate-avatar-idle cursor-grab active:cursor-grabbing"
                 style={{ filter: 'drop-shadow(0 10px 8px rgba(0,0,0,0.25))' }}
               >
                 <img src={avatarItem.icon} alt={avatarItem.name} className="w-32 h-32 sm:w-40 sm:h-40 object-contain select-none pointer-events-none" draggable={false} />
-              </button>
+              </div>
 
               {equippedIds.length > 0 && (
                 <div className="absolute -top-2 -right-2 flex flex-col gap-1">
