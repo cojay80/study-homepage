@@ -14,9 +14,41 @@ const client = createClient({ url, authToken, intMode: 'number' });
 // expecting statements to execute in the order issued (sqlite3's default
 // serialized-connection behavior). @libsql/client has no such guarantee
 // across separate execute() calls, so we chain every call through one queue.
+//
+// Routes also issue raw 'BEGIN IMMEDIATE TRANSACTION' / 'COMMIT' / 'ROLLBACK'
+// as plain SQL text (the sqlite3 pattern). That works on a single persistent
+// connection (local file), but @libsql/client's remote (Turso) transport has
+// no such implicit connection to hold a transaction open across separate
+// execute() calls -- COMMIT would silently apply to nothing. So we detect
+// those three statements here and route them through @libsql/client's actual
+// Transaction object instead, keeping every call site elsewhere unchanged.
 let tail = Promise.resolve();
+let activeTx = null;
+const EMPTY_RESULT = { rows: [], rowsAffected: 0, lastInsertRowid: undefined };
+
 function enqueue(sql, params) {
-    const run = () => client.execute({ sql, args: params });
+    const run = async () => {
+        const trimmed = sql.trim();
+        if (/^BEGIN\b/i.test(trimmed)) {
+            activeTx = await client.transaction(/IMMEDIATE/i.test(trimmed) ? 'write' : 'deferred');
+            return EMPTY_RESULT;
+        }
+        if (/^COMMIT\b/i.test(trimmed)) {
+            const tx = activeTx;
+            activeTx = null;
+            if (tx) await tx.commit();
+            return EMPTY_RESULT;
+        }
+        if (/^ROLLBACK\b/i.test(trimmed)) {
+            const tx = activeTx;
+            activeTx = null;
+            if (tx) {
+                try { await tx.rollback(); } catch { /* already closed, fine */ }
+            }
+            return EMPTY_RESULT;
+        }
+        return (activeTx || client).execute({ sql, args: params });
+    };
     const result = tail.then(run, run);
     tail = result.then(() => undefined, () => undefined);
     return result;

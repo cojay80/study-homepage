@@ -7,6 +7,7 @@ import { soundManager, SOUNDS } from '../utils/SoundManager';
 
 const LAYOUT_KEY = 'myRoom_layout_v1';
 const LOGIN_DAY_KEY = 'myRoom_lastLoginDay_v1';
+const STARTER_GRANTED_KEY = 'myRoom_starterGranted_v1';
 
 const CATEGORY_ORDER = ['furniture', 'decor', 'clothing', 'pet'];
 const CATEGORY_LABEL = { furniture: '가구', decor: '데코', clothing: '의상', pet: '펫' };
@@ -23,6 +24,16 @@ const ITEM_REACTIONS = {
 };
 const DEFAULT_REACTION = '✨';
 const reactionFor = (itemId) => ITEM_REACTIONS[itemId] || DEFAULT_REACTION;
+
+// Free starter items (see STORE_CATALOG on the server) laid out as fractions
+// of the room's width/height so a brand-new room isn't a blank floor.
+const STARTER_LAYOUT = [
+  { itemId: 'starter_rug', xf: 0.12, yf: 0.8 },
+  { itemId: 'starter_shelf', xf: 0.74, yf: 0.46 },
+  { itemId: 'starter_plant', xf: 0.06, yf: 0.48 },
+  { itemId: 'starter_lamp', xf: 0.84, yf: 0.22 },
+  { itemId: 'starter_chair', xf: 0.6, yf: 0.68 },
+];
 
 function localDayString(d = new Date()) {
   const yyyy = d.getFullYear();
@@ -149,6 +160,34 @@ const MyRoom = () => {
     loadFromServer().catch((e) => setError(e?.message || 'Failed to load.'));
   }, []);
 
+  // Grant the free starter set exactly once per browser (tracked by its own flag,
+  // not "room is empty" -- a kid who clears their room shouldn't get it refilled,
+  // and someone who already picked an avatar before this shipped should still get it).
+  useEffect(() => {
+    if (catalog.length === 0) return;
+    if (localStorage.getItem(STARTER_GRANTED_KEY) === '1') return;
+    const room = roomRef.current;
+    if (!room) return;
+
+    localStorage.setItem(STARTER_GRANTED_KEY, '1');
+    const owned = STARTER_LAYOUT.filter((s) => ownedSet.has(s.itemId));
+    if (owned.length === 0) return;
+
+    const rect = room.getBoundingClientRect();
+    const starterPlaced = owned.map((s) => ({
+      id: `starter_${s.itemId}`,
+      itemId: s.itemId,
+      x: clamp(rect.width * s.xf, 0, rect.width - 60),
+      y: clamp(rect.height * s.yf, 0, rect.height - 60),
+    }));
+
+    setPlacedItems((prev) => {
+      const next = [...prev, ...starterPlaced];
+      setTimeout(() => persistLayout({ placedItems: next }), 0);
+      return next;
+    });
+  }, [catalog.length, ownedSet]);
+
   useEffect(() => {
     if (catalog.length === 0) return;
     setPlacedItems((prev) => prev.filter((p) => ownedSet.has(p.itemId) && catalogById.has(p.itemId)));
@@ -158,11 +197,14 @@ const MyRoom = () => {
   }, [catalog.length, ownedSet, catalogById]);
 
   // First-time (or lost) avatar selection: open the picker once characters are known.
+  // Wait for the daily-bonus modal to close first -- both are full-screen overlays,
+  // and showing both at once let the later one swallow clicks meant for the other.
   useEffect(() => {
     if (avatarId) return;
     if (characterItems.length === 0) return;
+    if (showDailyBonus) return;
     setShowAvatarPicker(true);
-  }, [avatarId, characterItems.length]);
+  }, [avatarId, characterItems.length, showDailyBonus]);
 
   useEffect(() => {
     if (trayCategories.length > 0 && !trayCategories.includes(trayCategory)) {
