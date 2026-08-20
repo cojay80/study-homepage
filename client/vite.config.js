@@ -9,9 +9,12 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
+        id: '/',
         name: 'Magic Learning Kingdom',
         short_name: 'MagicKingdom',
         description: 'Gamified Learning for Kids',
+        start_url: '/',
+        scope: '/',
         theme_color: '#FDFBF7',
         background_color: '#FDFBF7',
         display: 'standalone',
