@@ -6,7 +6,13 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/server/index.js" },
-    { "handle": "filesystem" },
+    { "src": "/assets/(.*)", "dest": "/client/assets/$1" },
+    { "src": "/icons/(.*)", "dest": "/client/icons/$1" },
+    { "src": "/manifest\\.webmanifest", "dest": "/client/manifest.webmanifest" },
+    { "src": "/registerSW\\.js", "dest": "/client/registerSW.js" },
+    { "src": "/sw\\.js", "dest": "/client/sw.js" },
+    { "src": "/vite\\.svg", "dest": "/client/vite.svg" },
+    { "src": "/workbox-(.*)\\.js", "dest": "/client/workbox-$1.js" },
     { "src": "/(.*)", "dest": "/client/index.html" }
   ]
 }
