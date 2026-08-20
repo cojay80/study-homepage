@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #FDFBF7;
+  /* Cream */
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Jua', sans-serif;
+}
+
+/* Custom Utilities for 3D Transforms (Memory Game) */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Magic Fairytale Animations */
+@keyframes float-cloud-slow {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -15px) scale(1.05); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes float-cloud-fast {
+  0% { transform: translate(0, 0) scale(1.1); }
+  50% { transform: translate(-40px, 10px) scale(1); }
+  100% { transform: translate(0, 0) scale(1.1); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(253, 224, 71, 0.4)); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 0 30px rgba(253, 224, 71, 0.8)); }
+}
+
+@keyframes wave-bounce {
+  0%, 100% { transform: scaleY(0.2); }
+  50% { transform: scaleY(1); }
+}
+
+.animate-float-cloud-slow {
+  animation: float-cloud-slow 25s ease-in-out infinite;
+}
+
+.animate-float-cloud-fast {
+  animation: float-cloud-fast 18s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-wave-bounce {
+  animation: wave-bounce 0.8s ease-in-out infinite;
+  transform-origin: bottom;
+}
