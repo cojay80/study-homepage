@@ -35,16 +35,6 @@ const HAIRSTYLES = [
   { id: 'hair_dad', name: '짧은 머리', icon: '/assets/hair/hair_dad.png' },
 ];
 
-// Bald version of each character to render under the chosen hairstyle.
-// Boy/baby were already drawn bald, so they use their normal artwork as-is.
-const BALD_BASE = {
-  char_boy: '/assets/toca_boy_v3.png',
-  char_girl: '/assets/hair/bald_girl.png',
-  char_mom: '/assets/hair/bald_mom.png',
-  char_dad: '/assets/hair/bald_dad.png',
-  char_baby: '/assets/toca_baby_v1.png',
-};
-
 // Each character's own natural hairstyle, used as the default when picked.
 const DEFAULT_HAIR = {
   char_boy: 'none',
@@ -52,6 +42,35 @@ const DEFAULT_HAIR = {
   char_mom: 'hair_mom',
   char_dad: 'hair_dad',
   char_baby: 'none',
+};
+
+// Outfits extracted the same way as hairstyles -- each shares the same
+// 1024x1024 framing, so any outfit overlays correctly on any character's bare base.
+const OUTFITS = [
+  { id: 'outfit_girl', name: '원피스', icon: '/assets/outfits/outfit_girl.png' },
+  { id: 'outfit_boy', name: '레인보우 후드티', icon: '/assets/outfits/outfit_boy.png' },
+  { id: 'outfit_mom', name: '멜빵바지', icon: '/assets/outfits/outfit_mom.png' },
+  { id: 'outfit_dad', name: '셔츠와 바지', icon: '/assets/outfits/outfit_dad.png' },
+  { id: 'outfit_baby', name: '오리 잠옷', icon: '/assets/outfits/outfit_baby.png' },
+];
+
+// Bare (no hair, no outfit) version of each character -- the base every
+// avatar renders from, with the chosen outfit and hairstyle layered on top.
+const BARE_BASE = {
+  char_boy: '/assets/outfits/bare_boy.png',
+  char_girl: '/assets/outfits/bare_girl.png',
+  char_mom: '/assets/outfits/bare_mom.png',
+  char_dad: '/assets/outfits/bare_dad.png',
+  char_baby: '/assets/outfits/bare_baby.png',
+};
+
+// Each character's own natural outfit, used as the default when picked.
+const DEFAULT_OUTFIT = {
+  char_boy: 'outfit_boy',
+  char_girl: 'outfit_girl',
+  char_mom: 'outfit_mom',
+  char_dad: 'outfit_dad',
+  char_baby: 'outfit_baby',
 };
 
 // Free starter items (see STORE_CATALOG on the server) laid out as fractions
@@ -88,6 +107,7 @@ const MyRoom = () => {
   const [avatarId, setAvatarId] = useState(null);
   const [avatarPos, setAvatarPos] = useState(null); // { x, y } in room coordinates, like placedItems
   const [hairId, setHairId] = useState(null);
+  const [outfitId, setOutfitId] = useState(null);
   const [equippedIds, setEquippedIds] = useState([]);
   const [dragInventoryItemId, setDragInventoryItemId] = useState(null);
   const [draggingPlaced, setDraggingPlaced] = useState(null); // { id, offsetX, offsetY, startX, startY }
@@ -166,6 +186,7 @@ const MyRoom = () => {
       avatarId,
       avatarPos,
       hairId,
+      outfitId,
       equippedIds,
       ...overrides,
     };
@@ -182,6 +203,7 @@ const MyRoom = () => {
         if (typeof parsed?.avatarId === 'string') setAvatarId(parsed.avatarId);
         if (parsed?.avatarPos && typeof parsed.avatarPos.x === 'number') setAvatarPos(parsed.avatarPos);
         if (typeof parsed?.hairId === 'string') setHairId(parsed.hairId);
+        if (typeof parsed?.outfitId === 'string') setOutfitId(parsed.outfitId);
         if (Array.isArray(parsed?.equippedIds)) setEquippedIds(parsed.equippedIds);
       } catch {
         // ignore
@@ -263,6 +285,12 @@ const MyRoom = () => {
     setHairId(DEFAULT_HAIR[avatarId] || 'none');
   }, [avatarId, hairId]);
 
+  // Default to that character's own natural outfit until the kid picks a different one.
+  useEffect(() => {
+    if (!avatarId || outfitId) return;
+    setOutfitId(DEFAULT_OUTFIT[avatarId] || 'outfit_boy');
+  }, [avatarId, outfitId]);
+
   useEffect(() => {
     if (!draggingPlaced) return;
 
@@ -306,15 +334,22 @@ const MyRoom = () => {
 
   const selectAvatar = (id) => {
     const newHairId = DEFAULT_HAIR[id] || 'none';
+    const newOutfitId = DEFAULT_OUTFIT[id] || 'outfit_boy';
     setAvatarId(id);
     setHairId(newHairId);
+    setOutfitId(newOutfitId);
     setShowAvatarPicker(false);
-    persistLayout({ avatarId: id, hairId: newHairId });
+    persistLayout({ avatarId: id, hairId: newHairId, outfitId: newOutfitId });
   };
 
   const selectHair = (id) => {
     setHairId(id);
     persistLayout({ hairId: id });
+  };
+
+  const selectOutfit = (id) => {
+    setOutfitId(id);
+    persistLayout({ outfitId: id });
   };
 
   const toggleEquipped = (itemId) => {
@@ -466,11 +501,19 @@ const MyRoom = () => {
                 style={{ filter: 'drop-shadow(0 10px 8px rgba(0,0,0,0.25))' }}
               >
                 <img
-                  src={BALD_BASE[avatarId] || avatarItem.icon}
+                  src={BARE_BASE[avatarId] || avatarItem.icon}
                   alt={avatarItem.name}
                   className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
                   draggable={false}
                 />
+                {outfitId && (
+                  <img
+                    src={OUTFITS.find((o) => o.id === outfitId)?.icon}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
+                    draggable={false}
+                  />
+                )}
                 {hairId && hairId !== 'none' && (
                   <img
                     src={HAIRSTYLES.find((h) => h.id === hairId)?.icon}
@@ -749,6 +792,23 @@ const MyRoom = () => {
                       <span className="text-3xl">🙂</span>
                     )}
                     <div className="font-bold text-gray-800 text-[10px] text-center">{h.name}</div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <p className="text-sm font-extrabold text-gray-700 mb-2">옷</p>
+            <div className="grid grid-cols-4 gap-3 mb-5">
+              {OUTFITS.map((o) => {
+                const isSelected = outfitId === o.id;
+                return (
+                  <button
+                    key={o.id}
+                    onClick={() => selectOutfit(o.id)}
+                    className={`rounded-2xl border-2 p-2 flex flex-col items-center gap-1 hover:bg-orange-50 transition-colors ${isSelected ? 'border-orange-400 bg-orange-50' : 'border-gray-100'}`}
+                  >
+                    <img src={o.icon} alt={o.name} className="w-12 h-12 object-contain" />
+                    <div className="font-bold text-gray-800 text-[10px] text-center">{o.name}</div>
                   </button>
                 );
               })}
