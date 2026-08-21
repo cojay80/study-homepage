@@ -73,6 +73,22 @@ const DEFAULT_OUTFIT = {
   char_baby: 'outfit_baby',
 };
 
+// Visual pattern for each wallpaper, layered on top of its base color from the
+// server catalog. Client-side only (the server just knows id/name/price/color).
+const WALLPAPER_PATTERN = {
+  wall_pink: 'dot',
+  wall_blue: 'stripe',
+  wall_green: 'dot',
+  wall_wood: 'plank',
+  wall_sunset: 'stripe',
+  wall_purple: 'dot',
+  wall_mint: 'stripe',
+  wall_candy: 'dot',
+  wall_ocean: 'stripe',
+  wall_flower: 'dot',
+  wall_rainbow: 'stripe',
+};
+
 // Free starter items (see STORE_CATALOG on the server) laid out as fractions
 // of the room's width/height so a brand-new room isn't a blank floor.
 const STARTER_LAYOUT = [
@@ -163,6 +179,23 @@ const MyRoom = () => {
     if (item?.type === 'wallpaper' && item.color) return item.color;
     return '#FFF8E1';
   }, [wallpaperId, catalogById]);
+
+  // A subtle tone-on-tone pattern (dots/stripes/planks) layered over the flat
+  // wallpaper color so the wall reads as papered/paneled instead of painted.
+  const wallPatternStyle = useMemo(() => {
+    const pattern = WALLPAPER_PATTERN[wallpaperId];
+    const accent = 'rgba(255,255,255,0.4)';
+    if (pattern === 'dot') {
+      return { backgroundImage: `radial-gradient(${accent} 15%, transparent 16%)`, backgroundSize: '28px 28px' };
+    }
+    if (pattern === 'stripe') {
+      return { backgroundImage: `repeating-linear-gradient(45deg, ${accent} 0px, ${accent} 10px, transparent 10px, transparent 32px)` };
+    }
+    if (pattern === 'plank') {
+      return { backgroundImage: 'repeating-linear-gradient(90deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 3px, transparent 3px, transparent 70px)' };
+    }
+    return {};
+  }, [wallpaperId]);
 
   const loadFromServer = async () => {
     const [itemsRes, meRes] = await Promise.all([
@@ -456,17 +489,43 @@ const MyRoom = () => {
       >
         {/* Wall */}
         <div className="absolute inset-x-0 top-0 transition-colors duration-300" style={{ height: '72%', backgroundColor: wallColor }}>
-          {/* Window */}
-          <div className="absolute top-6 right-8 w-28 h-20 rounded-2xl bg-gradient-to-b from-sky-200 to-sky-100 border-4 border-white/80 shadow-inner overflow-hidden pointer-events-none">
-            <div className="absolute w-10 h-6 bg-white/90 rounded-full top-3 left-2 animate-float-cloud-slow" />
-            <div className="absolute w-8 h-5 bg-white/80 rounded-full top-8 left-10 animate-float-cloud-fast" />
-            <div className="absolute inset-y-0 left-1/2 w-[3px] bg-white/70" />
-            <div className="absolute inset-x-0 top-1/2 h-[3px] bg-white/70" />
+          {/* Tone-on-tone wallpaper pattern */}
+          <div className="absolute inset-0 pointer-events-none" style={wallPatternStyle} />
+
+          {/* Window with curtains */}
+          <div className="absolute top-6 right-8 flex items-start pointer-events-none">
+            <div
+              className="w-4 h-24 rounded-t-full -mr-1 mt-1 shadow-sm"
+              style={{ background: 'repeating-linear-gradient(90deg, #F48FB1 0px, #F48FB1 4px, #F06292 4px, #F06292 8px)' }}
+            />
+            <div className="w-28 h-20 rounded-2xl bg-gradient-to-b from-sky-200 to-sky-100 border-4 border-white/80 shadow-inner overflow-hidden relative">
+              <div className="absolute w-10 h-6 bg-white/90 rounded-full top-3 left-2 animate-float-cloud-slow" />
+              <div className="absolute w-8 h-5 bg-white/80 rounded-full top-8 left-10 animate-float-cloud-fast" />
+              <div className="absolute inset-y-0 left-1/2 w-[3px] bg-white/70" />
+              <div className="absolute inset-x-0 top-1/2 h-[3px] bg-white/70" />
+            </div>
+            <div
+              className="w-4 h-24 rounded-t-full -ml-1 mt-1 shadow-sm"
+              style={{ background: 'repeating-linear-gradient(90deg, #F48FB1 0px, #F48FB1 4px, #F06292 4px, #F06292 8px)' }}
+            />
           </div>
+
           {/* Ambient sparkles */}
           <Sparkles className="absolute top-10 left-10 text-yellow-200/70 w-6 h-6 animate-float-cloud-slow pointer-events-none" />
           <Sparkles className="absolute top-24 left-1/3 text-white/60 w-5 h-5 animate-float-cloud-fast pointer-events-none" />
         </div>
+
+        {/* Baseboard trim between wall and floor */}
+        <div
+          className="absolute inset-x-0"
+          style={{
+            top: '72%',
+            height: 14,
+            transform: 'translateY(-100%)',
+            background: 'linear-gradient(180deg, #FFFDF8 0%, #F0E9DC 70%, #D8CBB0 100%)',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.15)',
+          }}
+        />
 
         {/* Floor */}
         <div
@@ -475,11 +534,9 @@ const MyRoom = () => {
             height: '28%',
             backgroundColor: '#D8B98A',
             backgroundImage:
-              'linear-gradient(180deg, rgba(255,255,255,0.15), rgba(0,0,0,0.08)), repeating-linear-gradient(90deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 2px, transparent 2px, transparent 56px)',
+              'linear-gradient(180deg, rgba(255,255,255,0.15), rgba(0,0,0,0.08)), repeating-linear-gradient(90deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 2px, transparent 2px, transparent 56px), repeating-linear-gradient(0deg, rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 1px, transparent 1px, transparent 120px)',
           }}
         />
-        {/* Wall/floor seam shadow */}
-        <div className="absolute inset-x-0" style={{ top: '72%', height: 10, background: 'linear-gradient(180deg, rgba(0,0,0,0.15), transparent)' }} />
 
         {/* Avatar (draggable, like placed items) */}
         {avatarItem && avatarPos && (
