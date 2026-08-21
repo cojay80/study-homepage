@@ -13,14 +13,17 @@ const CATEGORY_ORDER = ['furniture', 'decor', 'clothing', 'pet'];
 const CATEGORY_LABEL = { furniture: '가구', decor: '데코', clothing: '의상', pet: '펫' };
 
 const ITEM_REACTIONS = {
-  pet_cat: '야옹~ 😺',
-  pet_dog: '멍멍! 🐶',
-  toy_robot: '삐빅삐빅 🤖',
-  toy_car: '부릉부릉! 🚗',
-  computer: '타닥타닥 💻',
-  speaker: '🎵🎶',
-  trophy: '최고야! 🏆',
-  balloons: '두둥실~ 🎈',
+  pet_cat: '야옹~ 😺', pet_dog: '멍멍! 🐶', pet_rabbit: '깡총깡총 🐰', pet_hamster: '찍찍! 🐹',
+  pet_bird: '짹짹! 🦜', pet_fish: '뻐끔뻐끔 🐟', pet_turtle: '느긋해요~ 🐢', pet_unicorn: '반짝반짝 🦄',
+  toy_robot: '삐빅삐빅 🤖', toy_car: '부릉부릉! 🚗', toy_dino: '크르렁! 🦖', toy_unicorn: '히히힝~ 🦄',
+  toy_bear: '꼬옥 안아줘요 🧸', toy_blocks: '쌓았다 무너뜨렸다! 🧱', toy_yoyo: '슝슝! 🪀',
+  computer: '타닥타닥 💻', gamepad: '게임하자! 🎮', speaker: '🎵🎶', headphones: '신나는 음악! 🎧',
+  trophy: '최고야! 🏆', medal: '자랑스러워요 🥇', balloons: '두둥실~ 🎈',
+  piano: '도레미파솔~ 🎹', guitar: '둥가둥가 🎸',
+  desk_wood: '공부하자! 📚', desk_white: '공부하자! 📚', desk_gaming: '집중! 🎮',
+  mirror: '예쁘다~ ✨', vanity: '꾸미기 좋아! 💄',
+  telescope: '별이 보여요! 🔭', globe: '세계여행 떠나요 🌍', aquarium: '물고기 구경! 🐠',
+  cabinet_tv: '만화 볼래요! 📺', kitchen_set: '요리해볼까? 🍳', bathtub: '첨벙첨벙! 🛁',
 };
 const DEFAULT_REACTION = '✨';
 const reactionFor = (itemId) => ITEM_REACTIONS[itemId] || DEFAULT_REACTION;
@@ -45,11 +48,28 @@ const ITEM_SIZE = {
 };
 const itemSizePx = (itemId) => ITEM_SIZE[itemId] || 96;
 
-// Furniture a dragged-close avatar will snap into and "sit" on until stood back up.
+// Furniture/decor a dragged-close avatar will snap onto until stood back up.
+// Three interaction shapes, checked in this priority order when the avatar is
+// dropped near more than one at once:
 const SEATS = new Set([
   'chair_wood', 'chair_gaming', 'starter_chair', 'stool_round', 'bench_window',
   'sofa_red', 'sofa_blue', 'sofa_corner',
 ]);
+const LIE_DOWN = new Set([
+  'bed_pink', 'bed_bunk', 'bed_cloud', 'bed_princess', 'bunk_ladder', 'hammock', 'tent_play',
+]);
+const STAND_NEARBY = new Set([
+  'desk_wood', 'desk_white', 'desk_gaming', 'mirror', 'vanity', 'table_round', 'table_square',
+  'kitchen_set', 'bathtub', 'piano', 'guitar', 'computer', 'gamepad', 'speaker', 'cabinet_tv',
+  'telescope', 'aquarium', 'globe',
+  'pet_cat', 'pet_dog', 'pet_rabbit', 'pet_hamster', 'pet_bird', 'pet_fish', 'pet_turtle', 'pet_unicorn',
+]);
+const interactionTypeFor = (itemId) => {
+  if (SEATS.has(itemId)) return 'sit';
+  if (LIE_DOWN.has(itemId)) return 'lie';
+  if (STAND_NEARBY.has(itemId)) return 'nearby';
+  return null;
+};
 
 // Hairstyles extracted from the character art (see scripts run for this feature) --
 // each hair PNG and each bald-base PNG share the same 1024x1024 framing as the
@@ -150,7 +170,7 @@ const MyRoom = () => {
   const [wallpaperId, setWallpaperId] = useState(null);
   const [avatarId, setAvatarId] = useState(null);
   const [avatarPos, setAvatarPos] = useState(null); // { x, y } in room coordinates, like placedItems
-  const [sittingOn, setSittingOn] = useState(null); // placedItems id the avatar is snapped to, or null
+  const [interactingWith, setInteractingWith] = useState(null); // { id, type: 'sit'|'lie'|'nearby' } | null
   const [hairId, setHairId] = useState(null);
   const [outfitId, setOutfitId] = useState(null);
   const [equippedIds, setEquippedIds] = useState([]);
@@ -384,7 +404,7 @@ const MyRoom = () => {
         if (!dragMovedRef.current) {
           triggerAvatarReaction();
         } else {
-          snapAvatarToNearbySeat(lastDragXYRef.current);
+          snapAvatarToNearbyInteractable(lastDragXYRef.current);
         }
       } else if (!dragMovedRef.current) {
         triggerItemReaction(draggingPlaced.id);
@@ -400,10 +420,10 @@ const MyRoom = () => {
     };
   }, [draggingPlaced]);
 
-  // If the avatar was dropped close to a chair/sofa, snap onto it and mark it
-  // "sitting" (locked in place until stood back up). Otherwise just clear
-  // any previous seat -- it moved away under its own steam.
-  const snapAvatarToNearbySeat = (pos) => {
+  // If the avatar was dropped close to an interactive item, snap onto/next to
+  // it (sit/lie/stand depending on the item) until stood back up. Otherwise
+  // just clear any previous interaction -- it moved away under its own steam.
+  const snapAvatarToNearbyInteractable = (pos) => {
     if (!pos) return;
     const AVATAR_SIZE = 140; // matches the rendered ~w-32/w-40 avatar
     const SNAP_RADIUS = 90;
@@ -413,26 +433,45 @@ const MyRoom = () => {
     let best = null;
     let bestDist = Infinity;
     for (const p of placedItemsRef.current) {
-      if (!SEATS.has(p.itemId)) continue;
+      const type = interactionTypeFor(p.itemId);
+      if (!type) continue;
       const size = itemSizePx(p.itemId);
       const dist = Math.hypot((p.x + size / 2) - avatarCenterX, (p.y + size / 2) - avatarCenterY);
-      if (dist < bestDist) { bestDist = dist; best = { p, size }; }
+      if (dist < bestDist) { bestDist = dist; best = { p, size, type }; }
     }
 
-    if (best && bestDist < SNAP_RADIUS) {
-      const seatX = best.p.x + best.size / 2 - AVATAR_SIZE / 2;
-      const seatY = best.p.y - AVATAR_SIZE * 0.3;
-      setAvatarPos({ x: seatX, y: seatY });
-      setSittingOn(best.p.id);
-      soundManager.playSFX(SOUNDS.SFX_CLICK);
-    } else {
-      setSittingOn(null);
+    if (!best || bestDist >= SNAP_RADIUS) {
+      setInteractingWith(null);
+      return;
     }
+
+    const { p, size, type } = best;
+    let x, y;
+    if (type === 'sit') {
+      x = p.x + size / 2 - AVATAR_SIZE / 2;
+      y = p.y - AVATAR_SIZE * 0.3;
+    } else if (type === 'lie') {
+      x = p.x + size / 2 - AVATAR_SIZE / 2;
+      y = p.y + size / 2 - AVATAR_SIZE / 2;
+    } else {
+      // 'nearby': stand just to the side, flipping to the left if there's no
+      // room to the right so the avatar never lands off-screen.
+      const room = roomRef.current;
+      const roomWidth = room ? room.getBoundingClientRect().width : 1200;
+      const toRight = p.x + size + 8 + AVATAR_SIZE <= roomWidth;
+      x = toRight ? p.x + size + 8 : Math.max(0, p.x - AVATAR_SIZE - 8);
+      y = p.y + size / 2 - AVATAR_SIZE / 2;
+    }
+
+    setAvatarPos({ x, y });
+    setInteractingWith({ id: p.id, type });
+    triggerItemReaction(p.id);
+    soundManager.playSFX(SOUNDS.SFX_CLICK);
   };
 
   const standUp = () => {
-    if (!sittingOn) return;
-    setSittingOn(null);
+    if (!interactingWith) return;
+    setInteractingWith(null);
     triggerAvatarReaction();
   };
 
@@ -633,7 +672,10 @@ const MyRoom = () => {
                 className="cursor-grab active:cursor-grabbing relative w-32 h-32 sm:w-40 sm:h-40 transition-transform"
                 style={{
                   filter: 'drop-shadow(0 10px 8px rgba(0,0,0,0.25))',
-                  transform: sittingOn ? 'scale(0.85)' : 'scale(1)',
+                  transform:
+                    interactingWith?.type === 'sit' ? 'scale(0.85)'
+                    : interactingWith?.type === 'lie' ? 'rotate(-90deg) scale(0.75)'
+                    : 'scale(1)',
                 }}
               >
                 <img
