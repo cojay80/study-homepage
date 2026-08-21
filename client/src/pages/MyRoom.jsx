@@ -25,6 +25,32 @@ const ITEM_REACTIONS = {
 const DEFAULT_REACTION = '✨';
 const reactionFor = (itemId) => ITEM_REACTIONS[itemId] || DEFAULT_REACTION;
 
+// Placed-item render size in px (default 96 if not listed) so furniture reads
+// at roughly the right scale next to the ~140px-tall avatar.
+const ITEM_SIZE = {
+  // Extra large furniture
+  bed_pink: 170, bed_bunk: 180, bed_cloud: 170, bed_princess: 190, bunk_ladder: 190,
+  sofa_red: 160, sofa_blue: 160, sofa_corner: 170, wardrobe: 170, wardrobe_pink: 170,
+  piano: 180, kitchen_set: 170, bathtub: 160, cabinet_tv: 140, bookcase_tall: 160,
+  aquarium: 130, tent_play: 160,
+  // Large
+  desk_wood: 120, desk_white: 120, desk_gaming: 120, table_round: 110, table_square: 110,
+  shelf_books: 130, shelf_toy: 120, starter_shelf: 110, mirror: 110, vanity: 120, hammock: 150,
+  // Seats -- sized so the avatar reads as sitting on/in them
+  chair_wood: 100, chair_gaming: 110, starter_chair: 100, stool_round: 80, bench_window: 110,
+  sofa_bean: 100,
+  // Small decor
+  candle: 50, medal: 55, cupcake_deco: 50, toy_yoyo: 50, basketball: 55, picture_frame: 60,
+  clock_wall: 65, plant_pot: 65, plant_cactus: 55, ribbon_red: 40,
+};
+const itemSizePx = (itemId) => ITEM_SIZE[itemId] || 96;
+
+// Furniture a dragged-close avatar will snap into and "sit" on until stood back up.
+const SEATS = new Set([
+  'chair_wood', 'chair_gaming', 'starter_chair', 'stool_round', 'bench_window',
+  'sofa_red', 'sofa_blue', 'sofa_corner',
+]);
+
 // Hairstyles extracted from the character art (see scripts run for this feature) --
 // each hair PNG and each bald-base PNG share the same 1024x1024 framing as the
 // original character images, so any hairstyle overlays correctly on any base.
@@ -114,6 +140,8 @@ const MyRoom = () => {
   const navigate = useNavigate();
   const roomRef = useRef(null);
   const dragMovedRef = useRef(false);
+  const lastDragXYRef = useRef(null);
+  const placedItemsRef = useRef([]);
 
   const [gold, setGold] = useState(0);
   const [catalog, setCatalog] = useState([]);
@@ -122,6 +150,7 @@ const MyRoom = () => {
   const [wallpaperId, setWallpaperId] = useState(null);
   const [avatarId, setAvatarId] = useState(null);
   const [avatarPos, setAvatarPos] = useState(null); // { x, y } in room coordinates, like placedItems
+  const [sittingOn, setSittingOn] = useState(null); // placedItems id the avatar is snapped to, or null
   const [hairId, setHairId] = useState(null);
   const [outfitId, setOutfitId] = useState(null);
   const [equippedIds, setEquippedIds] = useState([]);
@@ -325,6 +354,10 @@ const MyRoom = () => {
   }, [avatarId, outfitId]);
 
   useEffect(() => {
+    placedItemsRef.current = placedItems;
+  }, [placedItems]);
+
+  useEffect(() => {
     if (!draggingPlaced) return;
 
     const handleMove = (e) => {
@@ -338,6 +371,7 @@ const MyRoom = () => {
       const dy = e.clientY - draggingPlaced.startY;
       if (Math.abs(dx) > 6 || Math.abs(dy) > 6) dragMovedRef.current = true;
 
+      lastDragXYRef.current = { x, y };
       if (draggingPlaced.id === 'avatar') {
         setAvatarPos({ x, y });
       } else {
@@ -346,9 +380,14 @@ const MyRoom = () => {
     };
 
     const handleUp = () => {
-      if (!dragMovedRef.current) {
-        if (draggingPlaced.id === 'avatar') triggerAvatarReaction();
-        else triggerItemReaction(draggingPlaced.id);
+      if (draggingPlaced.id === 'avatar') {
+        if (!dragMovedRef.current) {
+          triggerAvatarReaction();
+        } else {
+          snapAvatarToNearbySeat(lastDragXYRef.current);
+        }
+      } else if (!dragMovedRef.current) {
+        triggerItemReaction(draggingPlaced.id);
       }
       setDraggingPlaced(null);
     };
@@ -360,6 +399,42 @@ const MyRoom = () => {
       window.removeEventListener('pointerup', handleUp);
     };
   }, [draggingPlaced]);
+
+  // If the avatar was dropped close to a chair/sofa, snap onto it and mark it
+  // "sitting" (locked in place until stood back up). Otherwise just clear
+  // any previous seat -- it moved away under its own steam.
+  const snapAvatarToNearbySeat = (pos) => {
+    if (!pos) return;
+    const AVATAR_SIZE = 140; // matches the rendered ~w-32/w-40 avatar
+    const SNAP_RADIUS = 90;
+    const avatarCenterX = pos.x + AVATAR_SIZE / 2;
+    const avatarCenterY = pos.y + AVATAR_SIZE / 2;
+
+    let best = null;
+    let bestDist = Infinity;
+    for (const p of placedItemsRef.current) {
+      if (!SEATS.has(p.itemId)) continue;
+      const size = itemSizePx(p.itemId);
+      const dist = Math.hypot((p.x + size / 2) - avatarCenterX, (p.y + size / 2) - avatarCenterY);
+      if (dist < bestDist) { bestDist = dist; best = { p, size }; }
+    }
+
+    if (best && bestDist < SNAP_RADIUS) {
+      const seatX = best.p.x + best.size / 2 - AVATAR_SIZE / 2;
+      const seatY = best.p.y - AVATAR_SIZE * 0.3;
+      setAvatarPos({ x: seatX, y: seatY });
+      setSittingOn(best.p.id);
+      soundManager.playSFX(SOUNDS.SFX_CLICK);
+    } else {
+      setSittingOn(null);
+    }
+  };
+
+  const standUp = () => {
+    if (!sittingOn) return;
+    setSittingOn(null);
+    triggerAvatarReaction();
+  };
 
   const saveLayout = () => {
     persistLayout();
@@ -554,8 +629,12 @@ const MyRoom = () => {
                     startY: e.clientY,
                   });
                 }}
-                className="animate-avatar-idle cursor-grab active:cursor-grabbing relative w-32 h-32 sm:w-40 sm:h-40"
-                style={{ filter: 'drop-shadow(0 10px 8px rgba(0,0,0,0.25))' }}
+                onDoubleClick={standUp}
+                className="cursor-grab active:cursor-grabbing relative w-32 h-32 sm:w-40 sm:h-40 transition-transform"
+                style={{
+                  filter: 'drop-shadow(0 10px 8px rgba(0,0,0,0.25))',
+                  transform: sittingOn ? 'scale(0.85)' : 'scale(1)',
+                }}
               >
                 <img
                   src={BARE_BASE[avatarId] || avatarItem.icon}
@@ -645,9 +724,16 @@ const MyRoom = () => {
               <div className="relative group cursor-grab active:cursor-grabbing">
                 <div style={{ filter: 'drop-shadow(0 8px 6px rgba(0,0,0,0.25))' }}>
                   {item.isImage ? (
-                    <img src={item.icon} alt={item.name} className="w-24 h-24 object-contain pointer-events-none mix-blend-multiply" />
+                    <img
+                      src={item.icon}
+                      alt={item.name}
+                      className="object-contain pointer-events-none mix-blend-multiply"
+                      style={{ width: itemSizePx(item.id), height: itemSizePx(item.id) }}
+                    />
                   ) : (
-                    <span className="text-6xl pointer-events-none">{item.icon}</span>
+                    <span className="pointer-events-none" style={{ fontSize: itemSizePx(item.id) * 0.65, lineHeight: 1 }}>
+                      {item.icon}
+                    </span>
                   )}
                 </div>
 

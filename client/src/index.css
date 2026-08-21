@@ -76,13 +76,3 @@ h6 {
   animation: wave-bounce 0.8s ease-in-out infinite;
   transform-origin: bottom;
 }
-
-/* My Room Avatar */
-@keyframes avatar-idle {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-8px) scale(1.02); }
-}
-
-.animate-avatar-idle {
-  animation: avatar-idle 2.4s ease-in-out infinite;
-}
