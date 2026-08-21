@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Music, Play, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Music, Play, RotateCcw, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const MotionDiv = motion.div;
@@ -105,6 +105,12 @@ const RhythmGame = () => {
 
     return (
         <div className="min-h-screen bg-[#212121] font-title relative overflow-hidden flex flex-col items-center">
+            {/* Night-sky twinkles -- kept the dark arcade theme (better contrast for
+                falling notes) but added a touch of the app's usual sparkle */}
+            <Sparkles className="absolute top-16 left-10 text-white/20 w-5 h-5 animate-float-cloud-slow pointer-events-none" />
+            <Sparkles className="absolute top-28 right-14 text-white/15 w-4 h-4 animate-float-cloud-fast pointer-events-none" />
+            <Sparkles className="absolute bottom-40 left-16 text-white/15 w-4 h-4 animate-float-cloud-slow pointer-events-none" />
+
             {/* Header */}
             <div className="w-full bg-[#424242] p-4 shadow-lg flex items-center justify-between z-20">
                 <button onClick={() => { stopGame(); navigate('/games'); }} className="bg-white/20 p-2 rounded-full text-white hover:bg-white/30 transition-colors">

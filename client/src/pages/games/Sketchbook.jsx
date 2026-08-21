@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Palette, Eraser, Download, Trash2, Undo } from 'lucide-react';
+import { ArrowLeft, Palette, Eraser, Download, Trash2, Undo, Sparkles } from 'lucide-react';
+import { CloudIcon } from '../../components/Assets';
 
 const COLORS = [
     '#000000', // Black
@@ -29,17 +30,25 @@ const Sketchbook = () => {
         const parent = canvas.parentElement;
 
         const updateSize = () => {
-            canvas.width = parent.clientWidth;
-            canvas.height = parent.clientHeight;
+            const { width, height } = parent.getBoundingClientRect();
+            if (width === 0 || height === 0) return; // not laid out yet
+            if (canvas.width === width && canvas.height === height) return;
+            canvas.width = width;
+            canvas.height = height;
             const context = canvas.getContext('2d');
             context.lineCap = 'round';
             context.lineJoin = 'round';
             ctxRef.current = context;
         };
 
+        // A plain mount-time measurement can run before the flex layout (and
+        // the rounded canvas frame it sits in) has finished settling, locking
+        // the canvas to a too-small size. ResizeObserver re-measures whenever
+        // the container's actual size changes, including that first settle.
         updateSize();
-        window.addEventListener('resize', updateSize);
-        return () => window.removeEventListener('resize', updateSize);
+        const observer = new ResizeObserver(updateSize);
+        observer.observe(parent);
+        return () => observer.disconnect();
     }, []);
 
     useEffect(() => {
@@ -111,7 +120,10 @@ const Sketchbook = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#FFF3E0] font-title relative overflow-hidden flex flex-col">
+        <div className="min-h-screen bg-gradient-to-b from-[#FFE0B2] to-[#FFF3E0] font-title relative overflow-hidden flex flex-col">
+            <CloudIcon className="absolute top-6 left-8 w-24 h-16 text-white/50 animate-float-cloud-slow pointer-events-none z-0" />
+            <Sparkles className="absolute top-20 right-16 text-white/60 w-6 h-6 animate-float-cloud-fast pointer-events-none z-0" />
+
             {/* Header */}
             <div className="bg-[#FF6F00] p-4 shadow-lg flex items-center justify-between z-20">
                 <button onClick={() => navigate('/games')} className="bg-white/20 p-2 rounded-full text-white hover:bg-white/30 transition-colors">
@@ -131,18 +143,20 @@ const Sketchbook = () => {
             </div>
 
             {/* Canvas Area */}
-            <div className="flex-1 relative w-full h-full overflow-hidden bg-white">
-                <canvas
-                    ref={canvasRef}
-                    onMouseDown={startDrawing}
-                    onMouseMove={draw}
-                    onMouseUp={stopDrawing}
-                    onMouseLeave={stopDrawing}
-                    onTouchStart={startDrawing}
-                    onTouchMove={draw}
-                    onTouchEnd={stopDrawing}
-                    className="w-full h-full touch-none cursor-crosshair"
-                />
+            <div className="flex-1 relative w-full h-full overflow-hidden p-3 z-10">
+                <div className="w-full h-full bg-white rounded-3xl shadow-xl border-4 border-white overflow-hidden">
+                    <canvas
+                        ref={canvasRef}
+                        onMouseDown={startDrawing}
+                        onMouseMove={draw}
+                        onMouseUp={stopDrawing}
+                        onMouseLeave={stopDrawing}
+                        onTouchStart={startDrawing}
+                        onTouchMove={draw}
+                        onTouchEnd={stopDrawing}
+                        className="w-full h-full touch-none cursor-crosshair"
+                    />
+                </div>
             </div>
 
             {/* Toolbar */}

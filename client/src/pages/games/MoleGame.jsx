@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Hammer, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Hammer, RotateCcw, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CloudIcon } from '../../components/Assets';
 
 const MotionDiv = motion.div;
 
@@ -63,7 +64,11 @@ const MoleGame = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#E1F5FE] font-title relative overflow-hidden select-none cursor-[url('https://cdn-icons-png.flaticon.com/32/2983/2983826.png'),_auto]">
+        <div className="min-h-screen bg-gradient-to-b from-[#B3E5FC] to-[#E1F5FE] font-title relative overflow-hidden select-none cursor-[url('https://cdn-icons-png.flaticon.com/32/2983/2983826.png'),_auto]">
+            <CloudIcon className="absolute top-6 left-8 w-24 h-16 text-white/60 animate-float-cloud-slow pointer-events-none" />
+            <CloudIcon className="absolute top-20 right-12 w-16 h-11 text-white/50 animate-float-cloud-fast pointer-events-none" />
+            <Sparkles className="absolute top-32 left-1/4 text-white/60 w-6 h-6 animate-float-cloud-slow pointer-events-none" />
+
             <div className="bg-[#0288D1] p-4 shadow-lg sticky top-0 z-20 flex items-center justify-between">
                 <button onClick={() => navigate('/games')} className="bg-white/20 p-2 rounded-full text-white hover:bg-white/30 transition-colors">
                     <ArrowLeft size={32} />

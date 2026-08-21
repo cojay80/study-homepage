@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Brain, RotateCcw, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CloudIcon } from '../../components/Assets';
 
 const MotionDiv = motion.div;
 
@@ -76,7 +77,11 @@ const MemoryGame = () => {
     const isGameOver = solved.length === cards.length && cards.length > 0;
 
     return (
-        <div className="min-h-screen bg-[#F3E5F5] font-title relative overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-b from-[#E1BEE7] to-[#F3E5F5] font-title relative overflow-hidden">
+            <CloudIcon className="absolute top-6 left-8 w-24 h-16 text-white/60 animate-float-cloud-slow pointer-events-none" />
+            <CloudIcon className="absolute top-20 right-12 w-16 h-11 text-white/50 animate-float-cloud-fast pointer-events-none" />
+            <Sparkles className="absolute top-32 right-1/4 text-white/60 w-6 h-6 animate-float-cloud-slow pointer-events-none" />
+
             <div className="bg-[#7B1FA2] p-4 shadow-lg sticky top-0 z-20 flex items-center justify-between">
                 <button onClick={() => navigate('/games')} className="bg-white/20 p-2 rounded-full text-white hover:bg-white/30 transition-colors">
                     <ArrowLeft size={32} />
