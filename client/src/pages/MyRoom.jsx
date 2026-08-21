@@ -25,6 +25,35 @@ const ITEM_REACTIONS = {
 const DEFAULT_REACTION = '✨';
 const reactionFor = (itemId) => ITEM_REACTIONS[itemId] || DEFAULT_REACTION;
 
+// Hairstyles extracted from the character art (see scripts run for this feature) --
+// each hair PNG and each bald-base PNG share the same 1024x1024 framing as the
+// original character images, so any hairstyle overlays correctly on any base.
+const HAIRSTYLES = [
+  { id: 'none', name: '민머리', icon: null },
+  { id: 'hair_girl', name: '양갈래 머리', icon: '/assets/hair/hair_girl.png' },
+  { id: 'hair_mom', name: '단발머리', icon: '/assets/hair/hair_mom.png' },
+  { id: 'hair_dad', name: '짧은 머리', icon: '/assets/hair/hair_dad.png' },
+];
+
+// Bald version of each character to render under the chosen hairstyle.
+// Boy/baby were already drawn bald, so they use their normal artwork as-is.
+const BALD_BASE = {
+  char_boy: '/assets/toca_boy_v3.png',
+  char_girl: '/assets/hair/bald_girl.png',
+  char_mom: '/assets/hair/bald_mom.png',
+  char_dad: '/assets/hair/bald_dad.png',
+  char_baby: '/assets/toca_baby_v1.png',
+};
+
+// Each character's own natural hairstyle, used as the default when picked.
+const DEFAULT_HAIR = {
+  char_boy: 'none',
+  char_girl: 'hair_girl',
+  char_mom: 'hair_mom',
+  char_dad: 'hair_dad',
+  char_baby: 'none',
+};
+
 // Free starter items (see STORE_CATALOG on the server) laid out as fractions
 // of the room's width/height so a brand-new room isn't a blank floor.
 const STARTER_LAYOUT = [
@@ -58,6 +87,7 @@ const MyRoom = () => {
   const [wallpaperId, setWallpaperId] = useState(null);
   const [avatarId, setAvatarId] = useState(null);
   const [avatarPos, setAvatarPos] = useState(null); // { x, y } in room coordinates, like placedItems
+  const [hairId, setHairId] = useState(null);
   const [equippedIds, setEquippedIds] = useState([]);
   const [dragInventoryItemId, setDragInventoryItemId] = useState(null);
   const [draggingPlaced, setDraggingPlaced] = useState(null); // { id, offsetX, offsetY, startX, startY }
@@ -135,6 +165,7 @@ const MyRoom = () => {
       wallpaperId,
       avatarId,
       avatarPos,
+      hairId,
       equippedIds,
       ...overrides,
     };
@@ -150,6 +181,7 @@ const MyRoom = () => {
         if (typeof parsed?.wallpaperId === 'string') setWallpaperId(parsed.wallpaperId);
         if (typeof parsed?.avatarId === 'string') setAvatarId(parsed.avatarId);
         if (parsed?.avatarPos && typeof parsed.avatarPos.x === 'number') setAvatarPos(parsed.avatarPos);
+        if (typeof parsed?.hairId === 'string') setHairId(parsed.hairId);
         if (Array.isArray(parsed?.equippedIds)) setEquippedIds(parsed.equippedIds);
       } catch {
         // ignore
@@ -225,6 +257,12 @@ const MyRoom = () => {
     setAvatarPos({ x: rect.width / 2 - 64, y: rect.height * 0.6 });
   }, [avatarId, avatarPos]);
 
+  // Default to that character's own natural hairstyle until the kid picks a different one.
+  useEffect(() => {
+    if (!avatarId || hairId) return;
+    setHairId(DEFAULT_HAIR[avatarId] || 'none');
+  }, [avatarId, hairId]);
+
   useEffect(() => {
     if (!draggingPlaced) return;
 
@@ -267,9 +305,16 @@ const MyRoom = () => {
   };
 
   const selectAvatar = (id) => {
+    const newHairId = DEFAULT_HAIR[id] || 'none';
     setAvatarId(id);
+    setHairId(newHairId);
     setShowAvatarPicker(false);
-    persistLayout({ avatarId: id });
+    persistLayout({ avatarId: id, hairId: newHairId });
+  };
+
+  const selectHair = (id) => {
+    setHairId(id);
+    persistLayout({ hairId: id });
   };
 
   const toggleEquipped = (itemId) => {
@@ -417,10 +462,23 @@ const MyRoom = () => {
                     startY: e.clientY,
                   });
                 }}
-                className="animate-avatar-idle cursor-grab active:cursor-grabbing"
+                className="animate-avatar-idle cursor-grab active:cursor-grabbing relative w-32 h-32 sm:w-40 sm:h-40"
                 style={{ filter: 'drop-shadow(0 10px 8px rgba(0,0,0,0.25))' }}
               >
-                <img src={avatarItem.icon} alt={avatarItem.name} className="w-32 h-32 sm:w-40 sm:h-40 object-contain select-none pointer-events-none" draggable={false} />
+                <img
+                  src={BALD_BASE[avatarId] || avatarItem.icon}
+                  alt={avatarItem.name}
+                  className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
+                  draggable={false}
+                />
+                {hairId && hairId !== 'none' && (
+                  <img
+                    src={HAIRSTYLES.find((h) => h.id === hairId)?.icon}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
+                    draggable={false}
+                  />
+                )}
               </div>
 
               {equippedIds.length > 0 && (
@@ -668,13 +726,35 @@ const MyRoom = () => {
           <div className="bg-white rounded-3xl p-6 shadow-2xl border-4 border-orange-100 max-w-xl w-full">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-extrabold text-gray-800 flex items-center gap-2">
-                <Shirt size={24} className="text-orange-400" /> 오늘의 아이템
+                <Shirt size={24} className="text-orange-400" /> 꾸미기
               </h2>
               <button onClick={() => setShowCloset(false)} className="bg-gray-100 hover:bg-gray-200 rounded-full p-2">
                 <X size={18} />
               </button>
             </div>
 
+            <p className="text-sm font-extrabold text-gray-700 mb-2">머리스타일</p>
+            <div className="grid grid-cols-4 gap-3 mb-5">
+              {HAIRSTYLES.map((h) => {
+                const isSelected = hairId === h.id;
+                return (
+                  <button
+                    key={h.id}
+                    onClick={() => selectHair(h.id)}
+                    className={`rounded-2xl border-2 p-2 flex flex-col items-center gap-1 hover:bg-orange-50 transition-colors ${isSelected ? 'border-orange-400 bg-orange-50' : 'border-gray-100'}`}
+                  >
+                    {h.icon ? (
+                      <img src={h.icon} alt={h.name} className="w-12 h-12 object-contain" />
+                    ) : (
+                      <span className="text-3xl">🙂</span>
+                    )}
+                    <div className="font-bold text-gray-800 text-[10px] text-center">{h.name}</div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <p className="text-sm font-extrabold text-gray-700 mb-2">오늘의 아이템</p>
             {closetItems.length === 0 ? (
               <div className="text-gray-500 font-body">
                 아직 의상이 없어요. 상점에서 구매해보세요.
