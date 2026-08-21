@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, Coins, Check } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Coins, Check, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { apiFetch } from '../utils/api';
+import { CloudIcon } from '../components/Assets';
 
 const MotionDiv = motion.div;
 
@@ -73,7 +74,11 @@ const Store = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF3E0] font-title relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-[#FFE0B2] to-[#FFF3E0] font-title relative overflow-hidden">
+      {/* Ambient decoration */}
+      <CloudIcon className="absolute top-6 left-8 w-24 h-16 text-white/60 animate-float-cloud-slow pointer-events-none" />
+      <CloudIcon className="absolute top-20 right-12 w-16 h-11 text-white/50 animate-float-cloud-fast pointer-events-none" />
+      <Sparkles className="absolute top-32 left-1/4 text-white/60 w-6 h-6 animate-float-cloud-slow pointer-events-none" />
       <div className="bg-[#FF9800] p-4 shadow-lg sticky top-0 z-20 flex items-center justify-between">
         <button onClick={() => navigate('/')} className="bg-white/20 p-2 rounded-full text-white hover:bg-white/30 transition-colors">
           <ArrowLeft size={32} />

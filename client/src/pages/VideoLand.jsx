@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Tv, Lightbulb } from 'lucide-react';
+import { ArrowLeft, Tv, Lightbulb, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { CloudIcon } from '../components/Assets';
 
 const MotionDiv = motion.div;
 
@@ -23,7 +24,12 @@ const VideoLand = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-[#E0F7FA] font-title relative overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-b from-[#B2EBF2] to-[#E0F7FA] font-title relative overflow-hidden">
+            {/* Ambient decoration */}
+            <CloudIcon className="absolute top-6 left-8 w-24 h-16 text-white/60 animate-float-cloud-slow pointer-events-none" />
+            <CloudIcon className="absolute top-20 right-12 w-16 h-11 text-white/50 animate-float-cloud-fast pointer-events-none" />
+            <Sparkles className="absolute top-32 left-1/4 text-white/60 w-6 h-6 animate-float-cloud-slow pointer-events-none" />
+
             {/* Header */}
             <div className="bg-[#00BCD4] p-4 shadow-lg sticky top-0 z-20 flex items-center justify-between">
                 <button onClick={() => navigate('/')} className="bg-white/20 p-2 rounded-full text-white hover:bg-white/30 transition-colors">
