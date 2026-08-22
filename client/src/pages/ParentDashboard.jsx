@@ -220,13 +220,13 @@ const ParentDashboard = () => {
 
   if (!parentToken) {
     return (
-      <div className="min-h-screen bg-gray-50 p-6">
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-blue-50/50 p-6">
         <div className="flex items-center mb-8">
-          <button onClick={() => navigate('/')} className="mr-4 p-2 bg-white rounded-full shadow-sm">
+          <button onClick={() => navigate('/')} className="mr-4 p-2 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
             <ArrowLeft size={20} />
           </button>
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <ShieldCheck size={22} /> 부모 모드
+            <span className="p-2 bg-blue-100 rounded-xl text-blue-600"><ShieldCheck size={20} /></span> 부모 모드
           </h1>
         </div>
 
@@ -303,18 +303,20 @@ const ParentDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-blue-50/50 p-6">
       <div className="flex items-center mb-8">
-        <button onClick={() => navigate('/')} className="mr-4 p-2 bg-white rounded-full shadow-sm">
+        <button onClick={() => navigate('/')} className="mr-4 p-2 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
           <ArrowLeft size={20} />
         </button>
-        <h1 className="text-2xl font-bold text-gray-800 flex-1">부모 리포트</h1>
+        <h1 className="text-2xl font-bold text-gray-800 flex-1 flex items-center gap-2">
+          <span className="p-2 bg-blue-100 rounded-xl text-blue-600"><ShieldCheck size={20} /></span> 부모 리포트
+        </h1>
         <button
           onClick={() => {
             clearParentToken();
             setParentTokenState(null);
           }}
-          className="px-4 py-2 bg-white rounded-xl shadow-sm border border-gray-100 text-gray-600 font-bold hover:bg-gray-50"
+          className="px-4 py-2 bg-white rounded-xl shadow-sm border border-gray-100 text-gray-600 font-bold hover:bg-gray-50 hover:shadow-md transition-shadow"
         >
           부모 모드 종료
         </button>
@@ -326,7 +328,7 @@ const ParentDashboard = () => {
       {/* Settings */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <Settings size={18} className="text-gray-500" />
+          <span className="p-1.5 bg-indigo-100 rounded-lg text-indigo-600"><Settings size={16} /></span>
           <h2 className="text-lg font-bold text-gray-800">AI 영어 대화 설정</h2>
         </div>
         <div className="text-sm text-gray-500 font-body mb-3">{usageText}</div>
@@ -351,7 +353,7 @@ const ParentDashboard = () => {
       {/* AI cost */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <MessageCircle size={18} className="text-gray-500" />
+          <span className="p-1.5 bg-emerald-100 rounded-lg text-emerald-600"><MessageCircle size={16} /></span>
           <h2 className="text-lg font-bold text-gray-800">AI 비용(월별)</h2>
         </div>
 
@@ -398,7 +400,7 @@ const ParentDashboard = () => {
       {/* Parent PIN change */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <LockKeyhole size={18} className="text-gray-500" />
+          <span className="p-1.5 bg-amber-100 rounded-lg text-amber-600"><LockKeyhole size={16} /></span>
           <h2 className="text-lg font-bold text-gray-800">부모 PIN 변경</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -429,7 +431,7 @@ const ParentDashboard = () => {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
         <div className="flex items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-2">
-            <BookOpenText size={18} className="text-gray-500" />
+            <span className="p-1.5 bg-sky-100 rounded-lg text-sky-600"><BookOpenText size={16} /></span>
             <h2 className="text-lg font-bold text-gray-800">오늘 AI 대화 요약</h2>
           </div>
           <button
@@ -500,7 +502,7 @@ const ParentDashboard = () => {
       {/* AI Recent */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <MessageCircle size={18} className="text-gray-500" />
+          <span className="p-1.5 bg-pink-100 rounded-lg text-pink-600"><MessageCircle size={16} /></span>
           <h2 className="text-lg font-bold text-gray-800">최근 AI 영어 대화</h2>
         </div>
         {aiReport?.recentMessages?.length ? (
@@ -521,7 +523,10 @@ const ParentDashboard = () => {
 
       {/* Recent Quiz Activity */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-bold text-gray-800 mb-4">최근 학습 기록</h2>
+        <div className="flex items-center gap-2 mb-4">
+          <span className="p-1.5 bg-purple-100 rounded-lg text-purple-600"><Activity size={16} /></span>
+          <h2 className="text-lg font-bold text-gray-800">최근 학습 기록</h2>
+        </div>
         <div className="space-y-3">
           {quizReport?.recentActivity?.map((item, index) => (
             <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
