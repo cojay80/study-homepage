@@ -24,6 +24,17 @@ const ITEM_REACTIONS = {
   mirror: '예쁘다~ ✨', vanity: '꾸미기 좋아! 💄',
   telescope: '별이 보여요! 🔭', globe: '세계여행 떠나요 🌍', aquarium: '물고기 구경! 🐠',
   cabinet_tv: '만화 볼래요! 📺', kitchen_set: '요리해볼까? 🍳', bathtub: '첨벙첨벙! 🛁',
+  starter_shelf: '책 읽어볼까? 📖', shelf_books: '책 읽어볼까? 📖', bookcase_tall: '책이 가득해요! 📚',
+  shelf_toy: '장난감이 가득해요! 🧸', wardrobe: '오늘은 뭐 입지? 👗', wardrobe_pink: '오늘은 뭐 입지? 👗',
+  starter_plant: '쑥쑥 자라라~ 🌱', plant_pot: '쑥쑥 자라라~ 🌱', plant_big: '쑥쑥 자라라~ 🌳',
+  plant_flower: '예쁜 꽃이에요 🌸', plant_cactus: '따끔따끔 조심! 🌵',
+  starter_lamp: '환하게 밝혀줘요! 💡', lamp_floor: '환하게 밝혀줘요! 💡',
+  lamp_star: '반짝반짝 작은 별 ⭐', lamp_moon: '잘 자요~ 🌙', garland_lights: '반짝반짝 예뻐요! ✨',
+  clock_wall: '몇 시일까? 🕐', picture_frame: '좋은 추억이에요 🖼️', candle: '후~ 소원을 빌어요 🕯️',
+  camera: '치즈~ 찰칵! 📸', basketball: '슛! 골인! 🏀', skateboard: '휭~ 타볼까? 🛹',
+  cupcake_deco: '맛있겠다! 🧁',
+  starter_rug: '포근해요~ 🧶', rug_bear: '푹신푹신해요 🧸', rug_rainbow: '무지개색이에요! 🌈',
+  rug_star: '별이 반짝여요 ⭐', rug_heart: '하트 모양이에요 💗',
 };
 const DEFAULT_REACTION = '✨';
 const reactionFor = (itemId) => ITEM_REACTIONS[itemId] || DEFAULT_REACTION;
@@ -49,7 +60,7 @@ const ITEM_SIZE = {
 const itemSizePx = (itemId) => ITEM_SIZE[itemId] || 96;
 
 // Furniture/decor a dragged-close avatar will snap onto until stood back up.
-// Three interaction shapes, checked in this priority order when the avatar is
+// Four interaction shapes, checked in this priority order when the avatar is
 // dropped near more than one at once:
 const SEATS = new Set([
   'chair_wood', 'chair_gaming', 'starter_chair', 'stool_round', 'bench_window',
@@ -63,10 +74,19 @@ const STAND_NEARBY = new Set([
   'kitchen_set', 'bathtub', 'piano', 'guitar', 'computer', 'gamepad', 'speaker', 'cabinet_tv',
   'telescope', 'aquarium', 'globe',
   'pet_cat', 'pet_dog', 'pet_rabbit', 'pet_hamster', 'pet_bird', 'pet_fish', 'pet_turtle', 'pet_unicorn',
+  'starter_shelf', 'shelf_books', 'bookcase_tall', 'shelf_toy', 'wardrobe', 'wardrobe_pink',
+  'starter_plant', 'plant_pot', 'plant_big', 'plant_flower', 'plant_cactus',
+  'starter_lamp', 'lamp_floor', 'lamp_star', 'lamp_moon', 'garland_lights',
+  'clock_wall', 'picture_frame', 'candle', 'camera', 'basketball', 'skateboard', 'cupcake_deco',
+  'toy_robot', 'toy_car', 'toy_dino', 'toy_unicorn', 'toy_bear', 'toy_blocks', 'toy_yoyo',
+  'trophy', 'medal', 'balloons', 'headphones',
 ]);
+// Rugs -- the avatar steps onto the middle of these rather than beside them.
+const STAND_ON = new Set(['starter_rug', 'rug_bear', 'rug_rainbow', 'rug_star', 'rug_heart']);
 const interactionTypeFor = (itemId) => {
   if (SEATS.has(itemId)) return 'sit';
   if (LIE_DOWN.has(itemId)) return 'lie';
+  if (STAND_ON.has(itemId)) return 'on';
   if (STAND_NEARBY.has(itemId)) return 'nearby';
   return null;
 };
@@ -451,6 +471,9 @@ const MyRoom = () => {
       x = p.x + size / 2 - AVATAR_SIZE / 2;
       y = p.y - AVATAR_SIZE * 0.3;
     } else if (type === 'lie') {
+      x = p.x + size / 2 - AVATAR_SIZE / 2;
+      y = p.y + size / 2 - AVATAR_SIZE / 2;
+    } else if (type === 'on') {
       x = p.x + size / 2 - AVATAR_SIZE / 2;
       y = p.y + size / 2 - AVATAR_SIZE / 2;
     } else {
