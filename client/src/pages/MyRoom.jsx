@@ -404,11 +404,14 @@ const SEAT_SURFACE = {
   swing_indoor: 0.55, teddy_giant: 0.45, bumper_car: 0.45, sled: 0.30,
 };
 const SEAT_SURFACE_DEFAULT = 0.50;
-// Fraction down the avatar sprite where the hips sit. Everything below this is
-// clipped away while seated -- the character art is a standing pose with no
-// bent-leg variant, so the legs are hidden behind the furniture rather than
-// left dangling through it.
-const AVATAR_HIP_FRACTION = 0.62;
+// Where the legs start in the 1024px character art, measured off the alpha
+// channel: the silhouette narrows into two leg columns at y=791 for the girl
+// and y=822 for the dad, so ~0.78 is the shared hip line. Doubles as the
+// point that gets planted on a seat surface.
+const LEG_TOP_FRACTION = 0.78;
+// Seated, the legs come toward the viewer, so they read as foreshortened.
+// Squashing the leg band vertically fakes that on a front-facing sprite.
+const SEATED_LEG_SQUASH = 0.45;
 
 // Rugs -- the avatar steps onto the middle of these rather than beside them.
 const STAND_ON = new Set([
@@ -608,6 +611,36 @@ const MyRoom = () => {
   );
 
   const avatarItem = avatarId ? catalogById.get(avatarId) : null;
+  const isSitting = interactingWith?.type === 'sit';
+
+  // The stacked body/outfit/hair images. Rendered once standing, or twice
+  // (upper body + squashed legs) to build the seated pose.
+  const avatarLayers = avatarItem ? (
+    <>
+      <img
+        src={BARE_BASE[avatarId] || avatarItem.icon}
+        alt={avatarItem.name}
+        className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
+        draggable={false}
+      />
+      {outfitId && (
+        <img
+          src={OUTFITS.find((o) => o.id === outfitId)?.icon}
+          alt=""
+          className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
+          draggable={false}
+        />
+      )}
+      {hairId && hairId !== 'none' && (
+        <img
+          src={HAIRSTYLES.find((h) => h.id === hairId)?.icon}
+          alt=""
+          className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
+          draggable={false}
+        />
+      )}
+    </>
+  ) : null;
 
   const wallColor = useMemo(() => {
     const item = wallpaperId ? catalogById.get(wallpaperId) : null;
@@ -883,7 +916,7 @@ const MyRoom = () => {
       const seatH = seatRect?.height || fallbackVisible;
 
       x = seatLeft + seatW / 2 - avatarW / 2;
-      y = seatTop + seatFrac * seatH - AVATAR_HIP_FRACTION * avatarH;
+      y = seatTop + seatFrac * seatH - LEG_TOP_FRACTION * avatarH;
     } else if (type === 'lie') {
       x = p.x + size / 2 - AVATAR_SIZE / 2;
       y = p.y + size / 2 - AVATAR_SIZE / 2;
@@ -1099,9 +1132,7 @@ const MyRoom = () => {
             style={{
               left: avatarPos.x,
               top: avatarPos.y,
-              // While seated the avatar drops below the furniture's layer so the
-              // chair/sofa draws over its lap and hides the clipped-off legs.
-              zIndex: interactingWith?.type === 'sit' ? 0 : 10,
+              zIndex: 10,
             }}
           >
             <div className="relative flex flex-col items-center">
@@ -1126,41 +1157,38 @@ const MyRoom = () => {
                   // touch-action:none stops mobile browsers from claiming the
                   // drag as a page scroll (which cut movement off after a few px).
                   touchAction: 'none',
-                  // Seated: cut the legs off at the hips (the art has no bent-leg
-                  // pose) and let the furniture cover the cut line.
-                  clipPath:
-                    interactingWith?.type === 'sit'
-                      ? `inset(0 0 ${(1 - AVATAR_HIP_FRACTION) * 100}% 0)`
-                      : 'none',
-                  filter:
-                    interactingWith?.type === 'sit'
-                      ? 'none'
-                      : 'drop-shadow(0 10px 8px rgba(0,0,0,0.25))',
+                  filter: 'drop-shadow(0 10px 8px rgba(0,0,0,0.25))',
                   transform:
                     interactingWith?.type === 'lie' ? 'rotate(-90deg) scale(0.75)' : 'scale(1)',
                 }}
               >
-                <img
-                  src={BARE_BASE[avatarId] || avatarItem.icon}
-                  alt={avatarItem.name}
-                  className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
-                  draggable={false}
-                />
-                {outfitId && (
-                  <img
-                    src={OUTFITS.find((o) => o.id === outfitId)?.icon}
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
-                    draggable={false}
-                  />
-                )}
-                {hairId && hairId !== 'none' && (
-                  <img
-                    src={HAIRSTYLES.find((h) => h.id === hairId)?.icon}
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
-                    draggable={false}
-                  />
+                {isSitting ? (
+                  <>
+                    {/* Seated pose. The art is a single standing sprite, so the
+                        legs are posed by splitting the sprite at the hip line
+                        and squashing the lower band: front-on, bent legs read
+                        as foreshortened rather than shortened. Every layer
+                        (body/outfit/hair) shares the same 1024px framing, so
+                        one band geometry poses all of them together. */}
+                    <div
+                      className="absolute inset-0"
+                      style={{ clipPath: `inset(0 0 ${(1 - LEG_TOP_FRACTION) * 100}% 0)` }}
+                    >
+                      {avatarLayers}
+                    </div>
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        clipPath: `inset(${LEG_TOP_FRACTION * 100}% 0 0 0)`,
+                        transform: `scaleY(${SEATED_LEG_SQUASH})`,
+                        transformOrigin: `center ${LEG_TOP_FRACTION * 100}%`,
+                      }}
+                    >
+                      {avatarLayers}
+                    </div>
+                  </>
+                ) : (
+                  avatarLayers
                 )}
               </div>
 
