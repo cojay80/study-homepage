@@ -30,6 +30,11 @@ const VIDEOS = [
     { id: '2HAHfL6xGO0', title: '춤추는 똥', url: 'https://www.youtube.com/embed/2HAHfL6xGO0' },
     { id: 'T0Fn6NN9k14', title: '귀를 지키는 귀지', url: 'https://www.youtube.com/embed/T0Fn6NN9k14' },
     { id: 'U7FWpN_FYH0', title: '집먼지진드기의 똥 공격', url: 'https://www.youtube.com/embed/U7FWpN_FYH0' },
+    { id: 'dr5IR1MwRb8', title: '귀신보다 무서운 설탕', url: 'https://www.youtube.com/embed/dr5IR1MwRb8' },
+    { id: 'C9vI656hQSA', title: '붕어빵 프로젝트! 유전자', url: 'https://www.youtube.com/embed/C9vI656hQSA' },
+    { id: 'SK9u6C_CHG8', title: '코딱지 파면 안 돼요', url: 'https://www.youtube.com/embed/SK9u6C_CHG8' },
+    { id: 'qR_BhwGzDt8', title: '물집 터트릴까?', url: 'https://www.youtube.com/embed/qR_BhwGzDt8' },
+    { id: 'VzUe9h7-3-Y', title: '코감기! 귀를 조심해', url: 'https://www.youtube.com/embed/VzUe9h7-3-Y' },
 ];
 
 const VideoLand = () => {

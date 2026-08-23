@@ -22,6 +22,9 @@ const STORIES = [
     { id: 'l_Dyx_XgXYg', title: '백설공주 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/l_Dyx_XgXYg' },
     { id: 'RqZV70hwozQ', title: '미운 아기 오리 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/RqZV70hwozQ' },
     { id: 'c_qt5j8Qnxk', title: '늑대와 일곱 마리 아기 양 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/c_qt5j8Qnxk' },
+    { id: '_E5FHY3aUnA', title: '라푼젤 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/_E5FHY3aUnA' },
+    { id: 'CvtKzRWeXdM', title: '피노키오 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/CvtKzRWeXdM' },
+    { id: 'JyqquUYtvN0', title: '개미와 베짱이 (이솝이야기)', category: 'story', url: 'https://www.youtube.com/embed/JyqquUYtvN0' },
 
     // Dance/Gymnastics (율동 동요)
     { id: 'ZAmVVIJ1I9E', title: '호이 호이! 알록달록 상어가족', category: 'dance', url: 'https://www.youtube.com/embed/ZAmVVIJ1I9E' },

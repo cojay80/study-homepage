@@ -27,6 +27,7 @@ const SONGS = [
     { id: 'X7jmN8P7XyE', title: '봄 동요 모음집', category: 'popular', color: 'bg-pink-200' },
     { id: '390KbCbX3f4', title: '가을 동요 모음집', category: 'popular', color: 'bg-orange-300' },
     { id: 'DZF06J5Ahzw', title: '나는야 공룡 요리사', category: 'popular', color: 'bg-lime-400' },
+    { id: '_kxuz2CnxRg', title: '우리 가족 사랑해 동요', category: 'popular', color: 'bg-rose-300' },
 
     // Math
     { id: 'amOjQsKqw6k', title: '숫자 쓰기', category: 'math', color: 'bg-green-400' },
@@ -35,6 +36,7 @@ const SONGS = [
     { id: 'pT6fKuzTrXY', title: '아기상어와 숫자송', category: 'math', color: 'bg-teal-400' },
     { id: 'lcl8uB2AWM0', title: 'Shapes Are All Around', category: 'math', color: 'bg-lime-500' },
     { id: 'jYPWrF6a3i0', title: 'Months Of The Year Song', category: 'math', color: 'bg-emerald-500' },
+    { id: 'IFRdn2O7h6M', title: '숫자 노래', category: 'math', color: 'bg-green-600' },
 
     // English
     { id: '_UR-l3QI2nE', title: 'ABC Song', category: 'english', color: 'bg-pink-500' },
@@ -45,6 +47,8 @@ const SONGS = [
     { id: 'z743VD-OvqE', title: 'Zebra Cadabra', category: 'english', color: 'bg-gray-400' },
     { id: '7DYjfjaZGas', title: 'Monkey Banana', category: 'english', color: 'bg-amber-500' },
     { id: 'y_RNpKIxNM4', title: 'Feelings', category: 'english', color: 'bg-purple-400' },
+    { id: 'HKev6QbYTVM', title: 'Opposites', category: 'english', color: 'bg-indigo-400' },
+    { id: 'P7-UNYm0P2w', title: 'Big Bigger Biggest', category: 'english', color: 'bg-blue-300' },
 ];
 
 const CATEGORIES = [
