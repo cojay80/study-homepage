@@ -6,18 +6,33 @@ import { CloudIcon } from '../../components/Assets';
 
 const MotionDiv = motion.div;
 
+const DIFFICULTIES = {
+    easy: { label: '쉬움', spawnInterval: 1200, visibleMin: 800, visibleMax: 1300 },
+    medium: { label: '보통', spawnInterval: 900, visibleMin: 550, visibleMax: 950 },
+    hard: { label: '어려움', spawnInterval: 650, visibleMin: 350, visibleMax: 650 },
+};
+const GAME_DURATION = 30;
+const GOLDEN_CHANCE = 0.15;
+
 const MoleGame = () => {
     const navigate = useNavigate();
+    const [difficultyId, setDifficultyId] = useState(null);
     const [score, setScore] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(30);
+    const [combo, setCombo] = useState(0);
+    const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
     const [isPlaying, setIsPlaying] = useState(false);
     const moles = new Array(9).fill(false);
     const [activeMole, setActiveMole] = useState(null);
+    const [isGolden, setIsGolden] = useState(false);
     const timerRef = useRef(null);
     const moleTimerRef = useRef(null);
+    const activeMoleRef = useRef(null);
+    const hitRef = useRef(false);
+    const comboRef = useRef(0);
 
     useEffect(() => {
-        if (!isPlaying) return;
+        if (!isPlaying || !difficultyId) return;
+        const diff = DIFFICULTIES[difficultyId];
 
         timerRef.current = setInterval(() => {
             setTimeLeft(prev => {
@@ -28,6 +43,7 @@ const MoleGame = () => {
                     moleTimerRef.current = null;
                     setIsPlaying(false);
                     setActiveMole(null);
+                    activeMoleRef.current = null;
                     return 0;
                 }
                 return prev - 1;
@@ -36,11 +52,21 @@ const MoleGame = () => {
 
         moleTimerRef.current = setInterval(() => {
             const randomIndex = Math.floor(Math.random() * 9);
+            const golden = Math.random() < GOLDEN_CHANCE;
+            hitRef.current = false;
+            activeMoleRef.current = randomIndex;
             setActiveMole(randomIndex);
+            setIsGolden(golden);
+            const visibleTime = diff.visibleMin + Math.random() * (diff.visibleMax - diff.visibleMin);
             setTimeout(() => {
-                setActiveMole(null);
-            }, Math.random() * 500 + 500);
-        }, 1000);
+                if (!hitRef.current && activeMoleRef.current === randomIndex) {
+                    comboRef.current = 0;
+                    setCombo(0);
+                }
+                setActiveMole(prev => (prev === randomIndex ? null : prev));
+                if (activeMoleRef.current === randomIndex) activeMoleRef.current = null;
+            }, visibleTime);
+        }, diff.spawnInterval);
 
         return () => {
             clearInterval(timerRef.current);
@@ -48,20 +74,67 @@ const MoleGame = () => {
             timerRef.current = null;
             moleTimerRef.current = null;
         };
-    }, [isPlaying]);
+    }, [isPlaying, difficultyId]);
 
     const startGame = () => {
         setScore(0);
-        setTimeLeft(30);
+        setCombo(0);
+        comboRef.current = 0;
+        setTimeLeft(GAME_DURATION);
         setIsPlaying(true);
     };
 
     const whackMole = (index) => {
-        if (index === activeMole && isPlaying) {
-            setScore(prev => prev + 10);
-            setActiveMole(null);
-        }
+        if (index !== activeMoleRef.current || !isPlaying) return;
+        hitRef.current = true;
+        comboRef.current += 1;
+        setCombo(comboRef.current);
+        const base = isGolden ? 30 : 10;
+        const bonus = Math.min(comboRef.current - 1, 5) * 2;
+        setScore(prev => prev + base + bonus);
+        setActiveMole(null);
+        activeMoleRef.current = null;
     };
+
+    if (!difficultyId) {
+        return (
+            <div className="min-h-screen bg-gradient-to-b from-[#B3E5FC] to-[#E1F5FE] font-title relative overflow-hidden">
+                <CloudIcon className="absolute top-6 left-8 w-24 h-16 text-white/60 animate-float-cloud-slow pointer-events-none" />
+                <CloudIcon className="absolute top-20 right-12 w-16 h-11 text-white/50 animate-float-cloud-fast pointer-events-none" />
+                <Sparkles className="absolute top-32 left-1/4 text-white/60 w-6 h-6 animate-float-cloud-slow pointer-events-none" />
+
+                <div className="bg-[#0288D1] p-4 shadow-lg sticky top-0 z-20 flex items-center justify-between">
+                    <button onClick={() => navigate('/games')} className="bg-white/20 p-2 rounded-full text-white hover:bg-white/30 transition-colors">
+                        <ArrowLeft size={32} />
+                    </button>
+                    <h1 className="text-3xl font-extrabold text-white drop-shadow-md flex items-center gap-2">
+                        <Hammer size={32} className="animate-bounce" /> 두더지 잡기
+                    </h1>
+                    <div className="w-12"></div>
+                </div>
+
+                <div className="max-w-2xl mx-auto p-6 flex flex-col items-center">
+                    <div className="bg-white rounded-3xl p-8 w-full shadow-xl border-4 border-blue-200">
+                        <h2 className="text-2xl font-black text-blue-700 mb-4 text-center">난이도를 골라주세요</h2>
+                        <div className="grid grid-cols-3 gap-3">
+                            {Object.entries(DIFFICULTIES).map(([id, d]) => (
+                                <button
+                                    key={id}
+                                    onClick={() => setDifficultyId(id)}
+                                    className="rounded-2xl py-6 font-bold text-lg shadow-md bg-blue-50 text-blue-600 hover:bg-blue-100 hover:scale-105 transition-all"
+                                >
+                                    {d.label}
+                                </button>
+                            ))}
+                        </div>
+                        <p className="text-center text-gray-400 mt-4 font-body">
+                            ✨ 황금 두더지를 잡으면 30점! 콤보를 이어가면 추가 점수도 받아요.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-[#B3E5FC] to-[#E1F5FE] font-title relative overflow-hidden select-none cursor-[url('https://cdn-icons-png.flaticon.com/32/2983/2983826.png'),_auto]">
@@ -70,26 +143,30 @@ const MoleGame = () => {
             <Sparkles className="absolute top-32 left-1/4 text-white/60 w-6 h-6 animate-float-cloud-slow pointer-events-none" />
 
             <div className="bg-[#0288D1] p-4 shadow-lg sticky top-0 z-20 flex items-center justify-between">
-                <button onClick={() => navigate('/games')} className="bg-white/20 p-2 rounded-full text-white hover:bg-white/30 transition-colors">
+                <button onClick={() => setDifficultyId(null)} className="bg-white/20 p-2 rounded-full text-white hover:bg-white/30 transition-colors">
                     <ArrowLeft size={32} />
                 </button>
                 <h1 className="text-3xl font-extrabold text-white drop-shadow-md flex items-center gap-2">
-                    <Hammer size={32} className="animate-bounce" /> 두더지 잡기
+                    <Hammer size={32} className="animate-bounce" /> 두더지 잡기 ({DIFFICULTIES[difficultyId].label})
                 </h1>
                 <div className="w-12"></div>
             </div>
 
             <div className="max-w-2xl mx-auto p-6 flex flex-col items-center">
-                <div className="flex gap-8 mb-8">
-                    <div className="bg-white px-8 py-4 rounded-2xl shadow-lg border-4 border-yellow-400 flex flex-col items-center">
+                <div className="flex gap-4 mb-8">
+                    <div className="bg-white px-6 py-4 rounded-2xl shadow-lg border-4 border-yellow-400 flex flex-col items-center">
                         <span className="text-gray-500 font-bold">점수</span>
                         <span className="text-4xl font-black text-yellow-600">{score}</span>
                     </div>
-                    <div className="bg-white px-8 py-4 rounded-2xl shadow-lg border-4 border-pink-400 flex flex-col items-center">
+                    <div className="bg-white px-6 py-4 rounded-2xl shadow-lg border-4 border-pink-400 flex flex-col items-center">
                         <span className="text-gray-500 font-bold">시간</span>
                         <span className={`text-4xl font-black ${timeLeft <= 5 ? 'text-red-500 animate-pulse' : 'text-pink-600'}`}>
                             {timeLeft}
                         </span>
+                    </div>
+                    <div className="bg-white px-6 py-4 rounded-2xl shadow-lg border-4 border-purple-400 flex flex-col items-center">
+                        <span className="text-gray-500 font-bold">콤보</span>
+                        <span className="text-4xl font-black text-purple-600">{combo}</span>
                     </div>
                 </div>
 
@@ -108,7 +185,10 @@ const MoleGame = () => {
                                             className="absolute bottom-0 left-1/2 w-20 h-24 sm:w-28 sm:h-28 cursor-pointer flex justify-center"
                                             onMouseDown={() => whackMole(index)}
                                         >
-                                            <div className="w-full h-full bg-[#795548] rounded-t-full relative border-4 border-[#5D4037]">
+                                            <div className={`w-full h-full rounded-t-full relative border-4 ${isGolden ? 'bg-[#FFC107] border-[#FF8F00]' : 'bg-[#795548] border-[#5D4037]'}`}>
+                                                {isGolden && (
+                                                    <Sparkles className="absolute -top-4 left-1/2 -translate-x-1/2 text-yellow-300 w-6 h-6" />
+                                                )}
                                                 <div className="absolute top-6 left-4 w-3 h-3 bg-black rounded-full">
                                                     <div className="absolute top-0.5 left-0.5 w-1 h-1 bg-white rounded-full"></div>
                                                 </div>
