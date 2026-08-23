@@ -523,6 +523,7 @@ const MyRoom = () => {
   const dragMovedRef = useRef(false);
   const lastDragXYRef = useRef(null);
   const placedItemsRef = useRef([]);
+  const interactingWithRef = useRef(null);
 
   const [gold, setGold] = useState(0);
   const [catalog, setCatalog] = useState([]);
@@ -751,6 +752,10 @@ const MyRoom = () => {
   }, [placedItems]);
 
   useEffect(() => {
+    interactingWithRef.current = interactingWith;
+  }, [interactingWith]);
+
+  useEffect(() => {
     if (!draggingPlaced) return;
 
     const handleMove = (e) => {
@@ -775,7 +780,14 @@ const MyRoom = () => {
     const handleUp = () => {
       if (draggingPlaced.id === 'avatar') {
         if (!dragMovedRef.current) {
-          triggerAvatarReaction();
+          // A tap (not a drag): stand up if seated/lying, otherwise just react.
+          // Tapping is the reliable touch gesture here -- dblclick is awkward
+          // on mobile and often gets eaten by the browser's zoom handling.
+          if (interactingWithRef.current) {
+            standUp();
+          } else {
+            triggerAvatarReaction();
+          }
         } else {
           snapAvatarToNearbyInteractable(lastDragXYRef.current);
         }
@@ -785,11 +797,17 @@ const MyRoom = () => {
       setDraggingPlaced(null);
     };
 
+    // If the browser cancels the gesture mid-drag, drop the drag state so the
+    // sprite doesn't get stuck following a pointer that no longer reports.
+    const handleCancel = () => setDraggingPlaced(null);
+
     window.addEventListener('pointermove', handleMove);
     window.addEventListener('pointerup', handleUp);
+    window.addEventListener('pointercancel', handleCancel);
     return () => {
       window.removeEventListener('pointermove', handleMove);
       window.removeEventListener('pointerup', handleUp);
+      window.removeEventListener('pointercancel', handleCancel);
     };
   }, [draggingPlaced]);
 
@@ -845,8 +863,11 @@ const MyRoom = () => {
     soundManager.playSFX(SOUNDS.SFX_CLICK);
   };
 
+  // Reads the ref rather than state so it stays correct when called from the
+  // drag effect, whose closure can hold a stale `interactingWith`.
   const standUp = () => {
-    if (!interactingWith) return;
+    if (!interactingWithRef.current) return;
+    interactingWithRef.current = null;
     setInteractingWith(null);
     triggerAvatarReaction();
   };
@@ -1036,6 +1057,8 @@ const MyRoom = () => {
                 onPointerDown={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
                   dragMovedRef.current = false;
+                  // Keep receiving moves even once the finger leaves the sprite.
+                  try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* ignore */ }
                   setDraggingPlaced({
                     id: 'avatar',
                     offsetX: e.clientX - rect.left,
@@ -1047,6 +1070,9 @@ const MyRoom = () => {
                 onDoubleClick={standUp}
                 className="cursor-grab active:cursor-grabbing relative w-32 h-32 sm:w-40 sm:h-40 transition-transform"
                 style={{
+                  // touch-action:none stops mobile browsers from claiming the
+                  // drag as a page scroll (which cut movement off after a few px).
+                  touchAction: 'none',
                   filter: 'drop-shadow(0 10px 8px rgba(0,0,0,0.25))',
                   transform:
                     interactingWith?.type === 'sit' ? 'scale(0.85)'
@@ -1126,10 +1152,11 @@ const MyRoom = () => {
             <div
               key={p.id}
               className="absolute select-none"
-              style={{ left: p.x, top: p.y }}
+              style={{ left: p.x, top: p.y, touchAction: 'none' }}
               onPointerDown={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 dragMovedRef.current = false;
+                try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* ignore */ }
                 setDraggingPlaced({
                   id: p.id,
                   offsetX: e.clientX - rect.left,
