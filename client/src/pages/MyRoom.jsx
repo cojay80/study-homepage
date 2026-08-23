@@ -404,14 +404,18 @@ const SEAT_SURFACE = {
   swing_indoor: 0.55, teddy_giant: 0.45, bumper_car: 0.45, sled: 0.30,
 };
 const SEAT_SURFACE_DEFAULT = 0.50;
-// Where the legs start in the 1024px character art, measured off the alpha
-// channel: the silhouette narrows into two leg columns at y=791 for the girl
-// and y=822 for the dad, so ~0.78 is the shared hip line. Doubles as the
-// point that gets planted on a seat surface.
-const LEG_TOP_FRACTION = 0.78;
-// Seated, the legs come toward the viewer, so they read as foreshortened.
-// Squashing the leg band vertically fakes that on a front-facing sprite.
-const SEATED_LEG_SQUASH = 0.45;
+// Leg anatomy, measured off the art's alpha channel. The silhouette drops
+// sharply where the hem ends and the two shins begin (girl y=789, dad y=823),
+// then widens again where the shoes start (girl y=873, dad y=915).
+const LEG_TOP_FRACTION = 0.79;  // hip -- also the point planted on a seat
+const ANKLE_FRACTION = 0.87;    // shin ends / shoe begins
+
+// Seated, the shin foreshortens as the knee comes toward the viewer. Only the
+// shin is compressed -- scaling the shoes too is what made the first attempt
+// read as "short legs standing on the chair" rather than sitting.
+const SEATED_SHIN_SQUASH = 0.35;
+// How far the shoes ride up once the shin above them has shortened.
+const SEATED_FOOT_LIFT = (ANKLE_FRACTION - LEG_TOP_FRACTION) * (1 - SEATED_SHIN_SQUASH);
 
 // Rugs -- the avatar steps onto the middle of these rather than beside them.
 const STAND_ON = new Set([
@@ -1164,24 +1168,36 @@ const MyRoom = () => {
               >
                 {isSitting ? (
                   <>
-                    {/* Seated pose. The art is a single standing sprite, so the
-                        legs are posed by splitting the sprite at the hip line
-                        and squashing the lower band: front-on, bent legs read
-                        as foreshortened rather than shortened. Every layer
+                    {/* Seated pose, built from the single standing sprite by
+                        splitting it into three bands. Every layer
                         (body/outfit/hair) shares the same 1024px framing, so
                         one band geometry poses all of them together. */}
+                    {/* Upper body -- untouched. */}
                     <div
                       className="absolute inset-0"
                       style={{ clipPath: `inset(0 0 ${(1 - LEG_TOP_FRACTION) * 100}% 0)` }}
                     >
                       {avatarLayers}
                     </div>
+                    {/* Shin -- compressed toward the hip so the knee reads as
+                        coming toward the viewer. */}
                     <div
                       className="absolute inset-0"
                       style={{
-                        clipPath: `inset(${LEG_TOP_FRACTION * 100}% 0 0 0)`,
-                        transform: `scaleY(${SEATED_LEG_SQUASH})`,
+                        clipPath: `inset(${LEG_TOP_FRACTION * 100}% 0 ${(1 - ANKLE_FRACTION) * 100}% 0)`,
+                        transform: `scaleY(${SEATED_SHIN_SQUASH})`,
                         transformOrigin: `center ${LEG_TOP_FRACTION * 100}%`,
+                      }}
+                    >
+                      {avatarLayers}
+                    </div>
+                    {/* Shoes -- kept at full scale, just lifted to meet the
+                        shortened shin, so they stay shoe-shaped. */}
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        clipPath: `inset(${ANKLE_FRACTION * 100}% 0 0 0)`,
+                        transform: `translateY(${-SEATED_FOOT_LIFT * 100}%)`,
                       }}
                     >
                       {avatarLayers}
