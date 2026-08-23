@@ -40,6 +40,9 @@ const VIDEOS = [
     { id: 'yL0xf2CGRTY', title: '손톱은 왜 잘라도 안 아파요', url: 'https://www.youtube.com/embed/yL0xf2CGRTY' },
     { id: 'OZSBsX57h9o', title: '찌릿찌릿! 살을 파고드는 발톱', url: 'https://www.youtube.com/embed/OZSBsX57h9o' },
     { id: 'ewO8H6PR6Aw', title: '짜게 먹으면 안 돼요', url: 'https://www.youtube.com/embed/ewO8H6PR6Aw' },
+    { id: 'KC89qOB8MKA', title: '찬바람에 터진 콧물댐', url: 'https://www.youtube.com/embed/KC89qOB8MKA' },
+    { id: '9wZepHboQlk', title: '전기를 만드는 콧바람', url: 'https://www.youtube.com/embed/9wZepHboQlk' },
+    { id: 'a8vwgVEIf2Y', title: '코털장군의 숨쉬기 작전', url: 'https://www.youtube.com/embed/a8vwgVEIf2Y' },
 ];
 
 const VideoLand = () => {

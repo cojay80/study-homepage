@@ -26,6 +26,7 @@ const STORIES = [
     { id: 'CvtKzRWeXdM', title: '피노키오 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/CvtKzRWeXdM' },
     { id: 'JyqquUYtvN0', title: '개미와 베짱이 (이솝이야기)', category: 'story', url: 'https://www.youtube.com/embed/JyqquUYtvN0' },
     { id: 'o9oO3qMWrSc', title: '신데렐라 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/o9oO3qMWrSc' },
+    { id: 'j5_0BaMNpqw', title: '개와 고양이 (전래동화)', category: 'story', url: 'https://www.youtube.com/embed/j5_0BaMNpqw' },
 
     // Dance/Gymnastics (율동 동요)
     { id: 'ZAmVVIJ1I9E', title: '호이 호이! 알록달록 상어가족', category: 'dance', url: 'https://www.youtube.com/embed/ZAmVVIJ1I9E' },
