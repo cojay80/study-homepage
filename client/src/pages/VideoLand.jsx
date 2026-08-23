@@ -20,6 +20,16 @@ const VIDEOS = [
     { id: 'WyiMp-i6pH0', title: '아이스크림 식중독', url: 'https://www.youtube.com/embed/WyiMp-i6pH0' },
     { id: 'ZS7U0Sy7bPk', title: '수두 이길 수 있어', url: 'https://www.youtube.com/embed/ZS7U0Sy7bPk' },
     { id: '5eRx1nOsKAs', title: '똥 냄새의 진짜 주인은?', url: 'https://www.youtube.com/embed/5eRx1nOsKAs' },
+    { id: 'l9_P9GsReSo', title: '엣취 재채기', url: 'https://www.youtube.com/embed/l9_P9GsReSo' },
+    { id: 'TE9wpehLAWo', title: '슈퍼딱지맨의 새집증후군', url: 'https://www.youtube.com/embed/TE9wpehLAWo' },
+    { id: 's0YkeowNF58', title: '납이 몸에 들어오면 안 돼요', url: 'https://www.youtube.com/embed/s0YkeowNF58' },
+    { id: 'DpNV-Z2ghDo', title: '터진 혈관을 막아라! 지혈특공대', url: 'https://www.youtube.com/embed/DpNV-Z2ghDo' },
+    { id: 'lPzvhZmrb5s', title: '너무 맵게 먹으면 안 돼요', url: 'https://www.youtube.com/embed/lPzvhZmrb5s' },
+    { id: '0Kz5ZSRQztI', title: '조심조심 성장판', url: 'https://www.youtube.com/embed/0Kz5ZSRQztI' },
+    { id: 'kqXzTQeCplY', title: '개에게 물리지 않게 조심', url: 'https://www.youtube.com/embed/kqXzTQeCplY' },
+    { id: '2HAHfL6xGO0', title: '춤추는 똥', url: 'https://www.youtube.com/embed/2HAHfL6xGO0' },
+    { id: 'T0Fn6NN9k14', title: '귀를 지키는 귀지', url: 'https://www.youtube.com/embed/T0Fn6NN9k14' },
+    { id: 'U7FWpN_FYH0', title: '집먼지진드기의 똥 공격', url: 'https://www.youtube.com/embed/U7FWpN_FYH0' },
 ];
 
 const VideoLand = () => {

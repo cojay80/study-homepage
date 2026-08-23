@@ -17,6 +17,16 @@ const SONGS = [
     { id: 'tIRul7vW_b0', title: '작은 별', category: 'popular', color: 'bg-yellow-400' },
     { id: 'VSNPr2ydsE0', title: '나비야', category: 'popular', color: 'bg-pink-300' },
     { id: 'M2cgndHuG04', title: '동물의 왕 사자', category: 'popular', color: 'bg-orange-400' },
+    { id: 'Go7mw5R3_EQ', title: '원숭이 엉덩이는 빨개', category: 'popular', color: 'bg-red-400' },
+    { id: 'pOiX3U0Vp-s', title: '경찰차', category: 'popular', color: 'bg-blue-600' },
+    { id: 'JnxwbY07jmY', title: '소방차', category: 'popular', color: 'bg-red-500' },
+    { id: 'R2PHf8j7nFo', title: '배꼽인사송', category: 'popular', color: 'bg-amber-400' },
+    { id: 'wq842bDgOis', title: '둥근 해가 떴어요', category: 'popular', color: 'bg-yellow-300' },
+    { id: 'jaEt8qwrahY', title: '치카치카 양치해요', category: 'popular', color: 'bg-sky-400' },
+    { id: 'JvfyAtvZRvk', title: '아기상어와 6단계 손씻기', category: 'popular', color: 'bg-teal-300' },
+    { id: 'X7jmN8P7XyE', title: '봄 동요 모음집', category: 'popular', color: 'bg-pink-200' },
+    { id: '390KbCbX3f4', title: '가을 동요 모음집', category: 'popular', color: 'bg-orange-300' },
+    { id: 'DZF06J5Ahzw', title: '나는야 공룡 요리사', category: 'popular', color: 'bg-lime-400' },
 
     // Math
     { id: 'amOjQsKqw6k', title: '숫자 쓰기', category: 'math', color: 'bg-green-400' },
@@ -24,12 +34,17 @@ const SONGS = [
     { id: 'oJXpXiiXSyA', title: '시계송 (1초 1분 1시간)', category: 'math', color: 'bg-emerald-400' },
     { id: 'pT6fKuzTrXY', title: '아기상어와 숫자송', category: 'math', color: 'bg-teal-400' },
     { id: 'lcl8uB2AWM0', title: 'Shapes Are All Around', category: 'math', color: 'bg-lime-500' },
+    { id: 'jYPWrF6a3i0', title: 'Months Of The Year Song', category: 'math', color: 'bg-emerald-500' },
 
     // English
     { id: '_UR-l3QI2nE', title: 'ABC Song', category: 'english', color: 'bg-pink-500' },
     { id: 'afZuyN3L7-w', title: 'Old MacDonald Had a Farm', category: 'english', color: 'bg-rose-400' },
     { id: 'HVDY3GxjivY', title: 'The Wheels on the Bus', category: 'english', color: 'bg-fuchsia-400' },
     { id: 'eT2rHegFiyA', title: 'Learn Colors with Color Hero', category: 'english', color: 'bg-violet-400' },
+    { id: 'ZrnE0XRMNqg', title: 'Che Che Koolay Giraffe', category: 'english', color: 'bg-yellow-500' },
+    { id: 'z743VD-OvqE', title: 'Zebra Cadabra', category: 'english', color: 'bg-gray-400' },
+    { id: '7DYjfjaZGas', title: 'Monkey Banana', category: 'english', color: 'bg-amber-500' },
+    { id: 'y_RNpKIxNM4', title: 'Feelings', category: 'english', color: 'bg-purple-400' },
 ];
 
 const CATEGORIES = [

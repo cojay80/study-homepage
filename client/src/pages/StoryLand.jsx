@@ -16,9 +16,16 @@ const STORIES = [
     { id: 'XUbbdLIbj-4', title: '선녀와 나무꾼 (전래동화)', category: 'story', url: 'https://www.youtube.com/embed/XUbbdLIbj-4' },
     { id: 'o60apGctKKQ', title: '해님 달님 (전래동화)', category: 'story', url: 'https://www.youtube.com/embed/o60apGctKKQ' },
     { id: 'kcZTYZDx5_c', title: '헨젤과 그레텔 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/kcZTYZDx5_c' },
+    { id: 'aXTUrgI3TQY', title: '아기 돼지 삼 형제 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/aXTUrgI3TQY' },
+    { id: 'bLzFnELQeFQ', title: '잭과 콩나무 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/bLzFnELQeFQ' },
+    { id: 'hyLfLi4ucII', title: '인어공주 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/hyLfLi4ucII' },
+    { id: 'l_Dyx_XgXYg', title: '백설공주 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/l_Dyx_XgXYg' },
+    { id: 'RqZV70hwozQ', title: '미운 아기 오리 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/RqZV70hwozQ' },
+    { id: 'c_qt5j8Qnxk', title: '늑대와 일곱 마리 아기 양 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/c_qt5j8Qnxk' },
 
     // Dance/Gymnastics (율동 동요)
     { id: 'ZAmVVIJ1I9E', title: '호이 호이! 알록달록 상어가족', category: 'dance', url: 'https://www.youtube.com/embed/ZAmVVIJ1I9E' },
+    { id: 'dw31Gdfj7oY', title: '튼튼쌤의 율동체조 인기율동 특집', category: 'dance', url: 'https://www.youtube.com/embed/dw31Gdfj7oY' },
     { id: 'PZ3Zvu8t1aE', title: '그냥 날 안아줘! 니니모찌', category: 'dance', url: 'https://www.youtube.com/embed/PZ3Zvu8t1aE' },
     { id: 'ANO_Oo6LIU8', title: '알 라 스콩! 아침 발레 인사', category: 'dance', url: 'https://www.youtube.com/embed/ANO_Oo6LIU8' },
     { id: 'U92JqNVD7YM', title: '키가 쑥! 몸이 튼튼! 율동체조', category: 'dance', url: 'https://www.youtube.com/embed/U92JqNVD7YM' },
