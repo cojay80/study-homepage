@@ -387,6 +387,29 @@ const STAND_NEARBY = new Set([
   'kaleidoscope_deco', 'slinky_deco',
   'pet_octopus', 'pet_crab', 'pet_stingray', 'pet_orca', 'pet_seagull',
 ]);
+// Emoji items are drawn at 0.65 of their nominal size (see the render below),
+// and the element shrinks to that glyph -- so the visible furniture is smaller
+// than itemSizePx suggests. Seat math has to use the visible box, not the
+// nominal one, or the avatar lands well below the actual seat.
+const GLYPH_RATIO = 0.65;
+
+// Where the sittable surface sits on each seat, as a fraction of its VISIBLE
+// height. The avatar's hips get anchored to this line so it reads as resting
+// on the seat instead of hovering over it.
+const SEAT_SURFACE = {
+  stool_round: 0.30, ottoman: 0.25, hay_bale: 0.28, mushroom_stool: 0.42,
+  beanbag: 0.45, papasan_chair: 0.45, sofa_bean: 0.45,
+  sofa_red: 0.55, sofa_blue: 0.55, sofa_corner: 0.55, sectional_sofa: 0.55, loveseat: 0.55,
+  chaise_lounge: 0.55, recliner: 0.52, throne_chair: 0.55, hanging_chair: 0.50,
+  swing_indoor: 0.55, teddy_giant: 0.45, bumper_car: 0.45, sled: 0.30,
+};
+const SEAT_SURFACE_DEFAULT = 0.50;
+// Fraction down the avatar sprite where the hips sit. Everything below this is
+// clipped away while seated -- the character art is a standing pose with no
+// bent-leg variant, so the legs are hidden behind the furniture rather than
+// left dangling through it.
+const AVATAR_HIP_FRACTION = 0.62;
+
 // Rugs -- the avatar steps onto the middle of these rather than beside them.
 const STAND_ON = new Set([
   'starter_rug', 'rug_bear', 'rug_rainbow', 'rug_star', 'rug_heart', 'rug_dino',
@@ -524,6 +547,7 @@ const MyRoom = () => {
   const lastDragXYRef = useRef(null);
   const placedItemsRef = useRef([]);
   const interactingWithRef = useRef(null);
+  const avatarElRef = useRef(null);
 
   const [gold, setGold] = useState(0);
   const [catalog, setCatalog] = useState([]);
@@ -839,8 +863,27 @@ const MyRoom = () => {
     const { p, size, type } = best;
     let x, y;
     if (type === 'sit') {
-      x = p.x + size / 2 - AVATAR_SIZE / 2;
-      y = p.y - AVATAR_SIZE * 0.3;
+      // Line the avatar's hips up with the seat surface so it rests on the
+      // seat rather than hovering above it. Both boxes are measured off the
+      // live DOM: the avatar renders at 128px or 160px depending on
+      // breakpoint, and an emoji's drawn size and side bearing don't match
+      // its nominal itemSizePx, so ratios alone land it off-centre.
+      const seatFrac = SEAT_SURFACE[p.itemId] ?? SEAT_SURFACE_DEFAULT;
+      const avatarRect = avatarElRef.current?.getBoundingClientRect();
+      const avatarW = avatarRect?.width || AVATAR_SIZE;
+      const avatarH = avatarRect?.height || AVATAR_SIZE;
+
+      const roomRect = roomRef.current?.getBoundingClientRect();
+      const seatEl = roomRef.current?.querySelector(`[data-placed-id="${CSS.escape(p.id)}"]`);
+      const seatRect = seatEl?.getBoundingClientRect();
+      const fallbackVisible = size * (catalogById.get(p.itemId)?.isImage ? 1 : GLYPH_RATIO);
+      const seatLeft = seatRect && roomRect ? seatRect.left - roomRect.left : p.x;
+      const seatTop = seatRect && roomRect ? seatRect.top - roomRect.top : p.y;
+      const seatW = seatRect?.width || fallbackVisible;
+      const seatH = seatRect?.height || fallbackVisible;
+
+      x = seatLeft + seatW / 2 - avatarW / 2;
+      y = seatTop + seatFrac * seatH - AVATAR_HIP_FRACTION * avatarH;
     } else if (type === 'lie') {
       x = p.x + size / 2 - AVATAR_SIZE / 2;
       y = p.y + size / 2 - AVATAR_SIZE / 2;
@@ -1051,9 +1094,19 @@ const MyRoom = () => {
 
         {/* Avatar (draggable, like placed items) */}
         {avatarItem && avatarPos && (
-          <div className="absolute z-10 select-none" style={{ left: avatarPos.x, top: avatarPos.y }}>
+          <div
+            className="absolute select-none"
+            style={{
+              left: avatarPos.x,
+              top: avatarPos.y,
+              // While seated the avatar drops below the furniture's layer so the
+              // chair/sofa draws over its lap and hides the clipped-off legs.
+              zIndex: interactingWith?.type === 'sit' ? 0 : 10,
+            }}
+          >
             <div className="relative flex flex-col items-center">
               <div
+                ref={avatarElRef}
                 onPointerDown={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
                   dragMovedRef.current = false;
@@ -1073,11 +1126,18 @@ const MyRoom = () => {
                   // touch-action:none stops mobile browsers from claiming the
                   // drag as a page scroll (which cut movement off after a few px).
                   touchAction: 'none',
-                  filter: 'drop-shadow(0 10px 8px rgba(0,0,0,0.25))',
+                  // Seated: cut the legs off at the hips (the art has no bent-leg
+                  // pose) and let the furniture cover the cut line.
+                  clipPath:
+                    interactingWith?.type === 'sit'
+                      ? `inset(0 0 ${(1 - AVATAR_HIP_FRACTION) * 100}% 0)`
+                      : 'none',
+                  filter:
+                    interactingWith?.type === 'sit'
+                      ? 'none'
+                      : 'drop-shadow(0 10px 8px rgba(0,0,0,0.25))',
                   transform:
-                    interactingWith?.type === 'sit' ? 'scale(0.85)'
-                    : interactingWith?.type === 'lie' ? 'rotate(-90deg) scale(0.75)'
-                    : 'scale(1)',
+                    interactingWith?.type === 'lie' ? 'rotate(-90deg) scale(0.75)' : 'scale(1)',
                 }}
               >
                 <img
@@ -1151,6 +1211,7 @@ const MyRoom = () => {
           return (
             <div
               key={p.id}
+              data-placed-id={p.id}
               className="absolute select-none"
               style={{ left: p.x, top: p.y, touchAction: 'none' }}
               onPointerDown={(e) => {
