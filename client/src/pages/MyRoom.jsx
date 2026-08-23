@@ -169,6 +169,23 @@ const ITEM_REACTIONS = {
   desert_lantern: '어둠을 밝혀줘요 🏮', cactus_flower_deco: '선인장에 꽃이 폈어요! 🌵',
   pet_reindeer: '썰매를 끌어요! 🦌', pet_arctic_fox: '하얀 털이 예뻐요 🦊', pet_walrus: '어흥~ 🦣',
   pet_seahorse: '살랑살랑 헤엄쳐요 🐠', pet_bat: '거꾸로 매달려요! 🦇',
+  submarine_furniture: '바닷속을 탐험해요! 🚤', watchtower: '멀리 보여요! 🏰', bumper_car: '빵빵! 부딪혀요 🚗',
+  cotton_candy_stand: '달콤한 솜사탕! 🍭', ticket_booth: '표를 사요! 🎫', mineral_display_case: '반짝이는 광물이에요 💎',
+  drawbridge: '다리가 열려요! 🌉', lifeguard_tower: '안전을 지켜요! 🏖️',
+  periscope_deco: '몰래 살펴봐요 🔭', deep_sea_light: '어두운 곳을 밝혀요 💡', angler_fish_deco: '무서운 이빨이에요! 🐟',
+  sea_cave_deco: '동굴 탐험이에요 🕳️', sonar_deco: '삐삐 소리가 나요 📡', oxygen_tank_deco: '숨쉬기 도와줘요 🫧',
+  catapult_deco: '슝! 발사해요 🏹', castle_wall_deco: '성을 지켜요! 🧱', banner_medieval_deco: '깃발이 휘날려요 🚩',
+  moat_deco: '물이 성을 둘러싸요 🌊', knight_horse_deco: '이랴! 달려요 🐴', jousting_lance: '창을 겨눠요! 🔱',
+  roller_coaster_deco: '슈웅~ 신나요! 🎢', ring_toss_game: '고리를 던져요! ⭕', prize_wall_deco: '선물을 골라요 🧸',
+  carnival_lights: '반짝반짝 축제예요! 🎇', funnel_cake_deco: '달콤한 간식이에요 🥞', balloon_dart_deco: '펑! 맞혔다! 🎯',
+  gem_collection_deco: '멋진 보석 모음이에요 💎', crystal_deco: '반짝반짝 수정이에요 🔮', geode_deco: '깨보면 놀라워요! 🪨',
+  rock_polisher: '돌을 반짝이게 해요 ⚙️', fossil_rock_deco: '아주 오래된 돌이에요 🪨',
+  bubble_wand_deco: '비눗방울 불어요~ 🫧', sidewalk_chalk: '바닥에 그림 그려요! 🖍️', hopscotch_deco: '깡충깡충 뛰어요 🔢',
+  pinwheel_deco: '빙글빙글 돌아가요 🎐', sandbox_deco: '모래 놀이해요! 🏖️', water_gun_deco: '물을 쏴요! 🔫',
+  frisbee_deco: '휙 던져요! 🥏', board_game_box: '같이 놀아요! 📦', playing_cards_deco: '카드 게임해요 🃏',
+  magic_trick_deco: '짜잔! 마술이에요 🎩', kaleidoscope_deco: '알록달록 신기해요! 🔮', slinky_deco: '스르륵 내려가요 🌀',
+  pet_octopus: '다리가 여덟 개예요! 🐙', pet_crab: '옆으로 걸어요~ 🦀', pet_stingray: '납작하게 헤엄쳐요 🐡',
+  pet_orca: '큰 소리로 울어요! 🐋', pet_seagull: '끼룩끼룩! 🐦',
 };
 const DEFAULT_REACTION = '✨';
 const reactionFor = (itemId) => ITEM_REACTIONS[itemId] || DEFAULT_REACTION;
@@ -255,6 +272,14 @@ const ITEM_SIZE = {
   film_roll_deco: 40, polaroid_deco: 45,
   // Sixth batch: pets
   pet_walrus: 140, pet_seahorse: 70,
+  // Seventh batch: deep-sea/medieval/carnival/mineral furniture
+  submarine_furniture: 190, watchtower: 170, drawbridge: 160, lifeguard_tower: 150,
+  bumper_car: 110, cotton_candy_stand: 130, ticket_booth: 130, mineral_display_case: 120,
+  // Seventh batch: small decor
+  sidewalk_chalk: 40, ring_toss_game: 60, playing_cards_deco: 45, frisbee_deco: 50,
+  slinky_deco: 45, bubble_wand_deco: 40, pinwheel_deco: 50, water_gun_deco: 55,
+  // Seventh batch: pets
+  pet_crab: 55, pet_seagull: 80, pet_orca: 150,
 };
 const itemSizePx = (itemId) => ITEM_SIZE[itemId] || 96;
 
@@ -268,12 +293,13 @@ const SEATS = new Set([
   'recliner', 'chaise_lounge', 'ottoman', 'hanging_chair', 'papasan_chair', 'folding_chair',
   'picnic_bench', 'garden_bench', 'hammock_chair', 'sectional_sofa', 'loveseat', 'vanity_stool',
   'rocket_chair', 'throne_chair', 'cafe_chair', 'beach_chair', 'sled',
-  'mushroom_stool', 'hay_bale', 'wheelchair', 'dentist_chair',
+  'mushroom_stool', 'hay_bale', 'wheelchair', 'dentist_chair', 'bumper_car',
 ]);
 const LIE_DOWN = new Set([
   'bed_pink', 'bed_bunk', 'bed_cloud', 'bed_princess', 'bunk_ladder', 'hammock', 'tent_play',
   'crib', 'murphy_bed', 'daybed', 'futon', 'bunk_triple', 'canopy_bed',
   'space_pod_bed', 'sleeping_bag', 'camping_tent', 'circus_tent', 'hospital_bed',
+  'submarine_furniture',
   'igloo_furniture', 'oasis_tent',
 ]);
 const STAND_NEARBY = new Set([
@@ -351,6 +377,15 @@ const STAND_NEARBY = new Set([
   'igloo_deco', 'ice_sculpture_deco', 'snow_shovel', 'arctic_flag', 'penguin_statue', 'icicle_deco',
   'oasis_deco', 'sand_dune_deco', 'camel_saddle', 'desert_lantern', 'cactus_flower_deco',
   'pet_reindeer', 'pet_arctic_fox', 'pet_walrus', 'pet_seahorse', 'pet_bat',
+  'watchtower', 'cotton_candy_stand', 'ticket_booth', 'mineral_display_case', 'drawbridge', 'lifeguard_tower',
+  'periscope_deco', 'deep_sea_light', 'angler_fish_deco', 'sea_cave_deco', 'sonar_deco', 'oxygen_tank_deco',
+  'catapult_deco', 'castle_wall_deco', 'banner_medieval_deco', 'moat_deco', 'knight_horse_deco', 'jousting_lance',
+  'roller_coaster_deco', 'ring_toss_game', 'prize_wall_deco', 'carnival_lights', 'funnel_cake_deco', 'balloon_dart_deco',
+  'gem_collection_deco', 'crystal_deco', 'geode_deco', 'rock_polisher', 'fossil_rock_deco',
+  'bubble_wand_deco', 'sidewalk_chalk', 'hopscotch_deco', 'pinwheel_deco', 'sandbox_deco',
+  'water_gun_deco', 'frisbee_deco', 'board_game_box', 'playing_cards_deco', 'magic_trick_deco',
+  'kaleidoscope_deco', 'slinky_deco',
+  'pet_octopus', 'pet_crab', 'pet_stingray', 'pet_orca', 'pet_seagull',
 ]);
 // Rugs -- the avatar steps onto the middle of these rather than beside them.
 const STAND_ON = new Set([
@@ -455,6 +490,10 @@ const WALLPAPER_PATTERN = {
   wall_photography: 'stripe',
   wall_arctic: 'star',
   wall_desert: 'stripe',
+  wall_deepsea: 'stripe',
+  wall_medieval: 'plank',
+  wall_carnival: 'dot',
+  wall_cave: 'plank',
 };
 
 // Free starter items (see STORE_CATALOG on the server) laid out as fractions
