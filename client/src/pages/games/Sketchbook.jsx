@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Palette, Eraser, Download, Trash2, Undo, Sparkles } from 'lucide-react';
+import { ArrowLeft, Palette, Download, Trash2, Pencil, Stamp, Sparkles } from 'lucide-react';
 import { CloudIcon } from '../../components/Assets';
 
 const COLORS = [
@@ -16,6 +16,17 @@ const COLORS = [
     '#FFFFFF', // White (Eraser)
 ];
 
+const STICKERS = [
+    '⭐', '✨', '💖', '💕', '🌈', '☀️', '🌙', '🎈', '🎉', '🦄',
+    '🐶', '🐱', '🐰', '🐻', '🦋', '🌸', '🍭', '🎀', '👑', '🍄',
+];
+
+const STICKER_SIZES = [
+    { label: '작게', size: 40 },
+    { label: '보통', size: 60 },
+    { label: '크게', size: 90 },
+];
+
 const Sketchbook = () => {
     const navigate = useNavigate();
     const canvasRef = useRef(null);
@@ -24,6 +35,9 @@ const Sketchbook = () => {
     const [lineWidth, setLineWidth] = useState(5);
     const [isDrawing, setIsDrawing] = useState(false);
     const [history, setHistory] = useState([]);
+    const [mode, setMode] = useState('draw'); // 'draw' | 'stamp'
+    const [selectedSticker, setSelectedSticker] = useState(STICKERS[0]);
+    const [stickerSize, setStickerSize] = useState(STICKER_SIZES[1].size);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -62,12 +76,23 @@ const Sketchbook = () => {
         const ctx = ctxRef.current;
         if (!ctx) return;
         const { offsetX, offsetY } = getCoordinates(e);
+
+        if (mode === 'stamp') {
+            ctx.font = `${stickerSize}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(selectedSticker, offsetX, offsetY);
+            saveHistory();
+            return;
+        }
+
         ctx.beginPath();
         ctx.moveTo(offsetX, offsetY);
         setIsDrawing(true);
     };
 
     const draw = (e) => {
+        if (mode === 'stamp') return;
         const ctx = ctxRef.current;
         if (!ctx) return;
         if (!isDrawing) return;
@@ -77,6 +102,7 @@ const Sketchbook = () => {
     };
 
     const stopDrawing = () => {
+        if (mode === 'stamp') return;
         const ctx = ctxRef.current;
         if (!ctx) return;
         if (isDrawing) {
@@ -161,35 +187,88 @@ const Sketchbook = () => {
 
             {/* Toolbar */}
             <div className="bg-white p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] flex flex-col gap-4 z-20 rounded-t-3xl">
-                {/* Colors */}
-                <div className="flex justify-center gap-3 overflow-x-auto pb-2">
-                    {COLORS.map((c) => (
-                        <button
-                            key={c}
-                            onClick={() => setColor(c)}
-                            className={`w-12 h-12 rounded-full border-4 shadow-sm transition-transform transform hover:scale-110
-                                ${color === c ? 'border-gray-800 scale-110' : 'border-white'}`}
-                            style={{ backgroundColor: c }}
-                        />
-                    ))}
+                {/* Mode Toggle */}
+                <div className="flex justify-center gap-3">
+                    <button
+                        onClick={() => setMode('draw')}
+                        className={`px-6 py-2 rounded-full font-bold text-lg shadow-sm transition-all flex items-center gap-2
+                            ${mode === 'draw' ? 'bg-[#FF6F00] text-white ring-4 ring-orange-200' : 'bg-orange-50 text-orange-600 hover:bg-orange-100'}`}
+                    >
+                        <Pencil size={20} /> 그리기
+                    </button>
+                    <button
+                        onClick={() => setMode('stamp')}
+                        className={`px-6 py-2 rounded-full font-bold text-lg shadow-sm transition-all flex items-center gap-2
+                            ${mode === 'stamp' ? 'bg-[#FF6F00] text-white ring-4 ring-orange-200' : 'bg-orange-50 text-orange-600 hover:bg-orange-100'}`}
+                    >
+                        <Stamp size={20} /> 도장
+                    </button>
                 </div>
 
-                {/* Brush Size */}
-                <div className="flex items-center justify-center gap-4">
-                    <span className="text-gray-500 font-bold">크기</span>
-                    <input
-                        type="range"
-                        min="1"
-                        max="30"
-                        value={lineWidth}
-                        onChange={(e) => setLineWidth(Number(e.target.value))}
-                        className="w-64 h-4 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#FF6F00]"
-                    />
-                    <div
-                        className="bg-black rounded-full"
-                        style={{ width: `${lineWidth}px`, height: `${lineWidth}px`, backgroundColor: color }}
-                    ></div>
-                </div>
+                {mode === 'draw' ? (
+                    <>
+                        {/* Colors */}
+                        <div className="flex justify-center gap-3 overflow-x-auto pb-2">
+                            {COLORS.map((c) => (
+                                <button
+                                    key={c}
+                                    onClick={() => setColor(c)}
+                                    className={`w-12 h-12 rounded-full border-4 shadow-sm transition-transform transform hover:scale-110
+                                        ${color === c ? 'border-gray-800 scale-110' : 'border-white'}`}
+                                    style={{ backgroundColor: c }}
+                                />
+                            ))}
+                        </div>
+
+                        {/* Brush Size */}
+                        <div className="flex items-center justify-center gap-4">
+                            <span className="text-gray-500 font-bold">크기</span>
+                            <input
+                                type="range"
+                                min="1"
+                                max="30"
+                                value={lineWidth}
+                                onChange={(e) => setLineWidth(Number(e.target.value))}
+                                className="w-64 h-4 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#FF6F00]"
+                            />
+                            <div
+                                className="bg-black rounded-full"
+                                style={{ width: `${lineWidth}px`, height: `${lineWidth}px`, backgroundColor: color }}
+                            ></div>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        {/* Stickers */}
+                        <div className="flex justify-center gap-2 overflow-x-auto pb-2 flex-wrap">
+                            {STICKERS.map((s) => (
+                                <button
+                                    key={s}
+                                    onClick={() => setSelectedSticker(s)}
+                                    className={`w-12 h-12 rounded-2xl text-2xl flex items-center justify-center shadow-sm transition-transform transform hover:scale-110
+                                        ${selectedSticker === s ? 'bg-orange-100 ring-4 ring-[#FF6F00]' : 'bg-gray-50'}`}
+                                >
+                                    {s}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Sticker Size */}
+                        <div className="flex items-center justify-center gap-3">
+                            <span className="text-gray-500 font-bold">크기</span>
+                            {STICKER_SIZES.map((s) => (
+                                <button
+                                    key={s.size}
+                                    onClick={() => setStickerSize(s.size)}
+                                    className={`px-5 py-2 rounded-full font-bold shadow-sm transition-all
+                                        ${stickerSize === s.size ? 'bg-[#FF6F00] text-white' : 'bg-orange-50 text-orange-600 hover:bg-orange-100'}`}
+                                >
+                                    {s.label}
+                                </button>
+                            ))}
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );
