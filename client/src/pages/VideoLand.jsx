@@ -35,6 +35,11 @@ const VIDEOS = [
     { id: 'SK9u6C_CHG8', title: '코딱지 파면 안 돼요', url: 'https://www.youtube.com/embed/SK9u6C_CHG8' },
     { id: 'qR_BhwGzDt8', title: '물집 터트릴까?', url: 'https://www.youtube.com/embed/qR_BhwGzDt8' },
     { id: 'VzUe9h7-3-Y', title: '코감기! 귀를 조심해', url: 'https://www.youtube.com/embed/VzUe9h7-3-Y' },
+    { id: 'tCbc41HSWck', title: '젓가락질을 열심히 해요', url: 'https://www.youtube.com/embed/tCbc41HSWck' },
+    { id: 'y0Gvya2P-t0', title: '움직이면 커지는 흉터', url: 'https://www.youtube.com/embed/y0Gvya2P-t0' },
+    { id: 'yL0xf2CGRTY', title: '손톱은 왜 잘라도 안 아파요', url: 'https://www.youtube.com/embed/yL0xf2CGRTY' },
+    { id: 'OZSBsX57h9o', title: '찌릿찌릿! 살을 파고드는 발톱', url: 'https://www.youtube.com/embed/OZSBsX57h9o' },
+    { id: 'ewO8H6PR6Aw', title: '짜게 먹으면 안 돼요', url: 'https://www.youtube.com/embed/ewO8H6PR6Aw' },
 ];
 
 const VideoLand = () => {
