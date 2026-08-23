@@ -38,6 +38,10 @@ const KOREAN_WORDS = [
     '콘서트', '무대', '마이크', '스피커', '온도계',
     '뛰기', '걷기', '앉기', '서기', '눕기', '웃음', '울음',
     '꿈', '그림자', '메아리', '노을', '이슬', '서리', '우박',
+    '망토', '가면', '변신', '힘', '사진', '앨범', '구슬', '주사위', '퍼즐',
+    '번개', '천둥', '눈보라', '빙하', '오로라', '모래', '오아시스', '선인장',
+    '더하기', '빼기', '곱하기', '나누기', '정육면체', '원기둥',
+    '월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일',
 ];
 
 const KOREAN_PROVERBS = [
@@ -133,6 +137,11 @@ const KOREAN_PROVERBS = [
     { q: '자라 보고 놀란 가슴 솥뚜껑 보고도 OOOO.', a: '놀란다' },
     { q: '열 사람이 지켜도 도둑 하나를 못 OOOO.', a: '막는다' },
     { q: '입은 삐뚤어져도 말은 바로 OOOO.', a: '해라' },
+    { q: '목마른 사람이 우물을 OOOO.', a: '판다' },
+    { q: '무소식이 OOOO.', a: '희소식' },
+    { q: '가는 날이 OOOO.', a: '장날이다' },
+    { q: '옷이 OOO.', a: '날개다' },
+    { q: '말 안 하면 귀신도 OOOO.', a: '모른다' },
 ];
 
 const ENGLISH_VOCAB = [
@@ -210,6 +219,13 @@ const ENGLISH_VOCAB = [
     { w: 'Run', m: '뛰기' }, { w: 'Walk', m: '걷기' }, { w: 'Sit', m: '앉기' }, { w: 'Stand', m: '서기' },
     { w: 'Sleep', m: '잠' }, { w: 'Dream', m: '꿈' }, { w: 'Shadow', m: '그림자' }, { w: 'Echo', m: '메아리' },
     { w: 'Sunset', m: '노을' }, { w: 'Dew', m: '이슬' }, { w: 'Frost', m: '서리' }, { w: 'Hail', m: '우박' },
+    { w: 'Cape', m: '망토' }, { w: 'Mask', m: '가면' }, { w: 'Photo', m: '사진' }, { w: 'Album', m: '앨범' },
+    { w: 'Marble', m: '구슬' }, { w: 'Dice', m: '주사위' }, { w: 'Puzzle', m: '퍼즐' },
+    { w: 'Thunder', m: '천둥' }, { w: 'Lightning', m: '번개' }, { w: 'Glacier', m: '빙하' }, { w: 'Aurora', m: '오로라' },
+    { w: 'Oasis', m: '오아시스' }, { w: 'Cactus', m: '선인장' },
+    { w: 'Plus', m: '더하기' }, { w: 'Minus', m: '빼기' }, { w: 'Cube', m: '정육면체' }, { w: 'Cylinder', m: '원기둥' },
+    { w: 'Monday', m: '월요일' }, { w: 'Tuesday', m: '화요일' }, { w: 'Wednesday', m: '수요일' },
+    { w: 'Thursday', m: '목요일' }, { w: 'Friday', m: '금요일' }, { w: 'Saturday', m: '토요일' }, { w: 'Sunday', m: '일요일' },
 ];
 
 const ENGLISH_GRAMMAR = [
@@ -362,6 +378,26 @@ const ENGLISH_GRAMMAR = [
     { q: 'Please ___ up and say hello.', a: 'stand', options: ['stand', 'sit', 'sleep', 'run'] },
     { q: 'The nurse gave me a ___.', a: 'thermometer', options: ['thermometer', 'syringe', 'bandage', 'stethoscope'] },
     { q: 'We played video games with a ___.', a: 'joystick', options: ['joystick', 'microphone', 'stethoscope', 'passport'] },
+    { q: 'The superhero wears a ___.', a: 'cape', options: ['cape', 'mask', 'photo', 'album'] },
+    { q: 'I put on my ___ before I fight bad guys.', a: 'mask', options: ['mask', 'cape', 'dice', 'puzzle'] },
+    { q: "Let's take a ___ together!", a: 'photo', options: ['photo', 'mask', 'cape', 'thunder'] },
+    { q: 'I keep my photos in an ___.', a: 'album', options: ['album', 'puzzle', 'dice', 'marble'] },
+    { q: 'We roll the ___ to play the game.', a: 'dice', options: ['dice', 'marble', 'puzzle', 'cape'] },
+    { q: 'I like to solve a ___.', a: 'puzzle', options: ['puzzle', 'dice', 'marble', 'mask'] },
+    { q: 'I heard ___ after the lightning.', a: 'thunder', options: ['thunder', 'lightning', 'hail', 'frost'] },
+    { q: 'The sky lit up with ___.', a: 'lightning', options: ['lightning', 'thunder', 'dew', 'sand'] },
+    { q: 'A ___ is a huge block of ice.', a: 'glacier', options: ['glacier', 'oasis', 'sand', 'cactus'] },
+    { q: 'We saw the ___ in the night sky.', a: 'aurora', options: ['aurora', 'oasis', 'glacier', 'sand'] },
+    { q: 'There is a lot of ___ in the desert.', a: 'sand', options: ['sand', 'snow', 'rain', 'glacier'] },
+    { q: 'We found water at the ___.', a: 'oasis', options: ['oasis', 'glacier', 'aurora', 'thunder'] },
+    { q: 'A ___ can live without water for a long time.', a: 'cactus', options: ['cactus', 'oasis', 'glacier', 'sand'] },
+    { q: 'Two ___ two equals four.', a: 'plus', options: ['plus', 'minus', 'equals', 'times'] },
+    { q: 'Five ___ two equals three.', a: 'minus', options: ['minus', 'plus', 'equals', 'times'] },
+    { q: 'A dice is shaped like a ___.', a: 'cube', options: ['cube', 'cylinder', 'circle', 'triangle'] },
+    { q: 'A can of soda is shaped like a ___.', a: 'cylinder', options: ['cylinder', 'cube', 'square', 'star'] },
+    { q: 'School starts on ___.', a: 'Monday', options: ['Monday', 'Saturday', 'Sunday', 'Friday'] },
+    { q: "We don't go to school on ___.", a: 'Sunday', options: ['Sunday', 'Monday', 'Tuesday', 'Wednesday'] },
+    { q: 'My favorite day is ___ because there is no school!', a: 'Saturday', options: ['Saturday', 'Monday', 'Tuesday', 'Wednesday'] },
 ];
 
 const seed = () => {
