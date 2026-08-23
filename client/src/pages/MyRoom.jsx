@@ -76,6 +76,31 @@ const ITEM_REACTIONS = {
   pet_owl: '부엉부엉! 🦉', pet_koala: '나무에 매달려요 🐨', pet_sloth: '천천히 움직여요~ 🦥',
   pet_dolphin: '헤엄쳐요! 🐬', pet_horse: '히히힝! 🐴', pet_sheep: '메에~ 🐑',
   pet_chicken: '꼬끼오! 🐔', pet_duck: '꽥꽥! 🦆', pet_chameleon: '색이 변해요! 🦎', pet_squirrel: '도토리 냠냠 🐿️',
+  rocket_chair: '우주로 출발! 🚀', throne_chair: '나는 왕이야! 👑', cafe_chair: '카페에 앉아요 ☕',
+  beach_chair: '햇살이 좋아요~ 🏖️', sled: '씽씽 눈썰매! 🛷',
+  space_pod_bed: '우주에서 잠들어요 🛸', sleeping_bag: '포근하게 잠들어요 😴', camping_tent: '캠핑 재밌다! 🏕️',
+  yoga_mat: '숨 크게 쉬어요~ 🧘',
+  castle_tower_shelf: '성 안의 보물이에요 🏰', treasure_chest: '보물이 가득해요! 💰', cafe_table: '주문할까요? ☕',
+  keyboard_synth: '띵동띵동~ 🎹', locker: '내 물건 보관함이에요 🗄️', desk_lamp_school: '밝게 비춰줘요 💡',
+  soccer_goal: '골인! ⚽', basketball_hoop: '슛! 골인! 🏀', wheelbarrow: '짐을 옮겨요 🛒',
+  blackboard: '칠판에 써볼까? ⬛', bookend: '책이 쓰러지지 않아요 📚',
+  astronaut_helmet_deco: '우주비행사예요! 👨‍🚀', alien_plant: '신기한 외계 식물이에요 🌱',
+  planet_mobile: '행성이 돌아가요 🪐', star_map: '별자리를 찾아봐요 🗺️', spaceship_toy: '슈웅~ 우주선! 🛸',
+  ufo_lamp: '삐용삐용 UFO예요 🛸', knight_armor_deco: '용감한 기사예요! 🛡️', shield_deco: '방어 완료! 🛡️',
+  sword_deco: '용사의 검이에요 ⚔️', dragon_toy: '크아앙! 🐉', crown_stand: '왕관을 씌워줘요 👑',
+  campfire_deco: '따뜻한 모닥불이에요 🔥', lantern_camping: '길을 밝혀줘요 🏮', fishing_rod: '물고기를 낚아요! 🎣',
+  compass_deco: '방향을 찾아요 🧭', binoculars: '멀리 보여요! 🔭', menu_board: '오늘의 메뉴예요 📋',
+  coffee_cup_deco: '따뜻한 커피예요 ☕', donut_deco: '달콤한 도넛! 🍩', sandwich_deco: '맛있는 샌드위치 🥪',
+  milkshake_deco: '시원한 밀크셰이크! 🥤', microphone_stand: '노래해볼까? 🎤', tambourine: '찰랑찰랑~ 🪘',
+  maracas: '차차차! 🎶', harmonica: '후~ 하모니카 🎵', tennis_racket: '테니스 치자! 🎾',
+  baseball_bat: '홈런이다! ⚾', dumbbell: '으랏차! 힘내요 🏋️', jump_rope: '줄넘기 하자! 🪢',
+  trophy_shelf: '우승 트로피예요! 🏆', globe_stand: '세계 여행 떠나요 🌍', world_map: '어디로 갈까요? 🗺️',
+  watering_can: '물을 줘요~ 🪴', flower_pot_large: '쑥쑥 자라라 🪴', snowflake_deco: '눈이 내려요! ❄️',
+  holiday_wreath: '메리 크리스마스! 🎄', gift_boxes: '선물이에요! 🎁', beach_umbrella: '시원한 그늘이에요 ⛱️',
+  surfboard: '파도를 타요! 🏄', seashell_collection: '바다 소리가 들려요 🐚',
+  scarf_winter: '따뜻해요~ 🧣', ski_goggles: '슝~ 스키 타요 🥽',
+  pet_llama: '음메~ 🦙', pet_flamingo: '한 발로 서요! 🦩', pet_peacock: '깃털이 예뻐요 🦚',
+  pet_raccoon: '손을 씻어요~ 🦝', pet_otter: '첨벙첨벙 헤엄쳐요 🦦', pet_seal: '꽥꽥 인사해요 🦭',
 };
 const DEFAULT_REACTION = '✨';
 const reactionFor = (itemId) => ITEM_REACTIONS[itemId] || DEFAULT_REACTION;
@@ -117,6 +142,22 @@ const ITEM_SIZE = {
   backpack_deco: 55, gnome_statue: 60, lamp_flower: 55, kite_deco: 60,
   // New pets
   pet_horse: 130, pet_dolphin: 110,
+  // Third batch: space/castle/camping/cafe/music/sports furniture
+  space_pod_bed: 170, camping_tent: 160, throne_chair: 130, castle_tower_shelf: 150,
+  keyboard_synth: 130, sled: 110, soccer_goal: 150, basketball_hoop: 140, blackboard: 130,
+  sleeping_bag: 100, cafe_table: 110, cafe_chair: 90, beach_chair: 90, locker: 110,
+  wheelbarrow: 90, bookend: 70, desk_lamp_school: 60, yoga_mat: 110,
+  // Third batch: small decor
+  astronaut_helmet_deco: 60, alien_plant: 55, planet_mobile: 60, star_map: 70, spaceship_toy: 65,
+  ufo_lamp: 65, knight_armor_deco: 90, shield_deco: 60, sword_deco: 55, dragon_toy: 80,
+  crown_stand: 55, campfire_deco: 70, lantern_camping: 55, fishing_rod: 70, compass_deco: 45,
+  binoculars: 55, menu_board: 70, coffee_cup_deco: 45, donut_deco: 45, sandwich_deco: 45,
+  milkshake_deco: 50, microphone_stand: 65, tambourine: 50, maracas: 45, harmonica: 45,
+  tennis_racket: 60, baseball_bat: 65, dumbbell: 50, jump_rope: 45, trophy_shelf: 90,
+  globe_stand: 80, world_map: 80, watering_can: 50, flower_pot_large: 80, snowflake_deco: 50,
+  holiday_wreath: 65, gift_boxes: 60, beach_umbrella: 100, surfboard: 100, seashell_collection: 50,
+  // Third batch: pets
+  pet_flamingo: 110, pet_peacock: 110, pet_llama: 120,
 };
 const itemSizePx = (itemId) => ITEM_SIZE[itemId] || 96;
 
@@ -129,10 +170,12 @@ const SEATS = new Set([
   'chair_office', 'beanbag', 'rocking_chair', 'swing_indoor', 'teddy_giant',
   'recliner', 'chaise_lounge', 'ottoman', 'hanging_chair', 'papasan_chair', 'folding_chair',
   'picnic_bench', 'garden_bench', 'hammock_chair', 'sectional_sofa', 'loveseat', 'vanity_stool',
+  'rocket_chair', 'throne_chair', 'cafe_chair', 'beach_chair', 'sled',
 ]);
 const LIE_DOWN = new Set([
   'bed_pink', 'bed_bunk', 'bed_cloud', 'bed_princess', 'bunk_ladder', 'hammock', 'tent_play',
   'crib', 'murphy_bed', 'daybed', 'futon', 'bunk_triple', 'canopy_bed',
+  'space_pod_bed', 'sleeping_bag', 'camping_tent',
 ]);
 const STAND_NEARBY = new Set([
   'desk_wood', 'desk_white', 'desk_gaming', 'mirror', 'vanity', 'table_round', 'table_square',
@@ -162,11 +205,22 @@ const STAND_NEARBY = new Set([
   'lamp_flower', 'telescope_gold', 'chess_set', 'puzzle_box', 'jewelry_box',
   'pet_owl', 'pet_koala', 'pet_sloth', 'pet_dolphin', 'pet_horse', 'pet_sheep', 'pet_chicken',
   'pet_duck', 'pet_chameleon', 'pet_squirrel',
+  'castle_tower_shelf', 'treasure_chest', 'cafe_table', 'keyboard_synth', 'locker',
+  'desk_lamp_school', 'soccer_goal', 'basketball_hoop', 'wheelbarrow', 'blackboard', 'bookend',
+  'astronaut_helmet_deco', 'alien_plant', 'planet_mobile', 'star_map', 'spaceship_toy', 'ufo_lamp',
+  'knight_armor_deco', 'shield_deco', 'sword_deco', 'dragon_toy', 'crown_stand',
+  'campfire_deco', 'lantern_camping', 'fishing_rod', 'compass_deco', 'binoculars',
+  'menu_board', 'coffee_cup_deco', 'donut_deco', 'sandwich_deco', 'milkshake_deco',
+  'microphone_stand', 'tambourine', 'maracas', 'harmonica',
+  'tennis_racket', 'baseball_bat', 'dumbbell', 'jump_rope', 'trophy_shelf',
+  'globe_stand', 'world_map', 'watering_can', 'flower_pot_large',
+  'snowflake_deco', 'holiday_wreath', 'gift_boxes', 'beach_umbrella', 'surfboard', 'seashell_collection',
+  'pet_llama', 'pet_flamingo', 'pet_peacock', 'pet_raccoon', 'pet_otter', 'pet_seal',
 ]);
 // Rugs -- the avatar steps onto the middle of these rather than beside them.
 const STAND_ON = new Set([
   'starter_rug', 'rug_bear', 'rug_rainbow', 'rug_star', 'rug_heart', 'rug_dino',
-  'rug_zebra', 'rug_polka', 'rug_geometric',
+  'rug_zebra', 'rug_polka', 'rug_geometric', 'yoga_mat',
 ]);
 const interactionTypeFor = (itemId) => {
   if (SEATS.has(itemId)) return 'sit';
@@ -248,6 +302,11 @@ const WALLPAPER_PATTERN = {
   wall_stripe_blue: 'stripe',
   wall_stripe_pink: 'stripe',
   wall_beach: 'stripe',
+  wall_castle: 'plank',
+  wall_camping: 'plank',
+  wall_underwater: 'stripe',
+  wall_school: 'dot',
+  wall_farm: 'plank',
 };
 
 // Free starter items (see STORE_CATALOG on the server) laid out as fractions
