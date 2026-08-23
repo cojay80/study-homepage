@@ -1,11 +1,23 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, Coins, Check, Sparkles } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Coins, Check, Sparkles, Search, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { apiFetch } from '../utils/api';
 import { CloudIcon } from '../components/Assets';
 
 const MotionDiv = motion.div;
+
+// The catalog is several hundred items, so the grid is filtered down by
+// category/search rather than dumped out all at once.
+const CATEGORIES = [
+  { id: 'all', name: '전체', icon: '🛍️' },
+  { id: 'character', name: '캐릭터', icon: '🧒' },
+  { id: 'furniture', name: '가구', icon: '🪑' },
+  { id: 'decor', name: '데코', icon: '🖼️' },
+  { id: 'clothing', name: '의상', icon: '👗' },
+  { id: 'pet', name: '펫', icon: '🐶' },
+  { id: 'wallpaper', name: '벽지', icon: '🧱' },
+];
 
 const Store = () => {
   const navigate = useNavigate();
@@ -15,8 +27,21 @@ const Store = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [buyingItemId, setBuyingItemId] = useState(null);
+  const [category, setCategory] = useState('all');
+  const [search, setSearch] = useState('');
+  const [hideOwned, setHideOwned] = useState(false);
 
   const ownedSet = useMemo(() => new Set(inventory), [inventory]);
+
+  const visibleItems = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return items.filter((item) => {
+      if (category !== 'all' && item.type !== category) return false;
+      if (hideOwned && ownedSet.has(item.id)) return false;
+      if (q && !String(item.name || '').toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [items, category, search, hideOwned, ownedSet]);
 
   useEffect(() => {
     let mounted = true;
@@ -92,12 +117,68 @@ const Store = () => {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto p-8">
+      {/* Category tabs */}
+      <div className="flex justify-center gap-3 px-4 pt-6 overflow-x-auto">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => setCategory(cat.id)}
+            className={`px-5 py-2.5 rounded-full font-bold shadow-md transition-all transform hover:scale-105 whitespace-nowrap
+              ${category === cat.id
+                ? 'bg-[#FF6F00] text-white ring-4 ring-orange-200'
+                : 'bg-white text-orange-600 hover:bg-orange-50'}`}
+          >
+            {cat.icon} {cat.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Search + owned filter */}
+      <div className="max-w-4xl mx-auto px-8 pt-5 flex flex-col sm:flex-row gap-3 sm:items-center">
+        <div className="relative flex-1">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-300" size={20} />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="이름으로 찾기..."
+            className="w-full pl-12 pr-10 py-3 rounded-2xl border-4 border-white shadow-md font-body text-gray-700 outline-none focus:border-orange-200"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <X size={20} />
+            </button>
+          )}
+        </div>
+        <button
+          onClick={() => setHideOwned((v) => !v)}
+          className={`px-5 py-3 rounded-2xl font-bold shadow-md whitespace-nowrap transition-colors
+            ${hideOwned ? 'bg-[#FF6F00] text-white' : 'bg-white text-orange-600 hover:bg-orange-50'}`}
+        >
+          {hideOwned ? '✓ 안 가진 것만' : '안 가진 것만'}
+        </button>
+      </div>
+
+      <div className="max-w-4xl mx-auto p-8 pt-5">
         {loading && <div className="text-center text-gray-500 font-body animate-pulse">Loading...</div>}
         {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 font-body mb-4">{error}</div>}
 
+        {!loading && (
+          <div className="text-center text-orange-700/70 font-body mb-5">
+            {visibleItems.length}개의 아이템
+          </div>
+        )}
+
+        {!loading && visibleItems.length === 0 && (
+          <div className="text-center text-gray-500 font-body py-10">
+            찾는 아이템이 없어요. 다른 이름으로 찾아볼까요?
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {items.map((item) => {
+          {visibleItems.map((item) => {
             const isOwned = ownedSet.has(item.id);
             const isBuying = buyingItemId === item.id;
             return (
