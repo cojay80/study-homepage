@@ -101,6 +101,33 @@ const ITEM_REACTIONS = {
   scarf_winter: '따뜻해요~ 🧣', ski_goggles: '슝~ 스키 타요 🥽',
   pet_llama: '음메~ 🦙', pet_flamingo: '한 발로 서요! 🦩', pet_peacock: '깃털이 예뻐요 🦚',
   pet_raccoon: '손을 씻어요~ 🦝', pet_otter: '첨벙첨벙 헤엄쳐요 🦦', pet_seal: '꽥꽥 인사해요 🦭',
+  mushroom_stool: '폭신폭신 버섯이에요 🍄', hay_bale: '농장 냄새가 나요 🌾',
+  fairy_house: '요정이 살아요! 🏡', barn_deco: '동물들의 집이에요 🏚️', circus_tent: '서커스 구경하자! 🎪',
+  carousel_deco: '빙글빙글 재밌어요 🎠', ferris_wheel_deco: '높이 올라가요! 🎡', lighthouse_deco: '불빛이 반짝여요 🗼',
+  dino_egg_deco: '공룡이 태어날까요? 🥚', volcano_deco: '펑! 용암이 나와요 🌋', fossil_deco: '아주 오래됐어요 🦴',
+  dino_bone_deco: '공룡 뼈다귀예요 🦴', pteranodon_toy: '푸드덕! 날아가요 🦅', triceratops_toy: '뿔이 세 개예요! 🦕',
+  trex_toy: '크아앙! 무서워요 🦖', prehistoric_plant: '아주 옛날 식물이에요 🌿', amber_deco: '보석처럼 빛나요 🟠',
+  dino_footprint_rug: '쿵쿵 발자국이에요 🐾',
+  tablet_deco: '영상을 봐요! 📱', vr_headset: '다른 세상이 보여요! 🥽', drone_toy: '위이잉 날아가요 🚁',
+  robot_arm_deco: '움직여요! 🦾', circuit_board_deco: '삐삐빅 신기해요 🔌', gear_deco: '돌아가요~ ⚙️',
+  laser_toy: '슉! 쏘아볼까요? 🔫', hologram_deco: '신비로워요! 💠',
+  toadstool_deco: '만지면 안 돼요! 🍄', fairy_wings_deco: '날아볼까요? 🧚', magic_wand_deco: '마법을 부려요! 🪄',
+  potion_bottle: '무슨 약일까요? 🧪', spellbook_deco: '주문을 외워요~ 📕', glowing_mushroom: '빛이 나요! 🍄',
+  fairy_ring_rug: '요정들이 춤춰요 🍄',
+  scarecrow_deco: '까마귀야 저리 가! 🧑‍🌾', farm_fence: '농장 울타리예요 🚧', silo_deco: '곡식을 저장해요 🏭',
+  milk_bucket: '신선한 우유예요 🪣', egg_basket: '달걀이 가득해요 🧺', corn_deco: '옥수수 맛있겠다! 🌽',
+  pumpkin_patch: '커다란 호박이에요 🎃',
+  coral_deco: '알록달록 산호예요 🪸', treasure_map: '보물을 찾아봐요! 🗺️', pearl_deco: '반짝이는 진주예요 ⚪',
+  anchor_deco: '배를 고정해요 ⚓', ship_wheel: '항해를 떠나요! ☸️', mermaid_tail_deco: '인어공주 같아요 🧜',
+  bubble_deco: '보글보글 물방울 🫧', wave_deco: '철썩철썩 파도예요 🌊',
+  paint_palette: '무슨 색을 칠할까요? 🎨', paintbrush_deco: '그림을 그려요! 🖌️', sculpture_deco: '멋진 조각상이에요 🗿',
+  clay_deco: '조물조물 만들어요 🧱', watercolor_deco: '알록달록해요! 🎨', sketchpad_deco: '그림을 그려볼까요? 📓',
+  oven_deco: '따끈따끈 구워져요 🔥', rolling_pin: '반죽을 밀어요~ 🪵', cupcake_stand: '컵케이크 진열대예요 🧁',
+  pie_deco: '맛있는 파이예요! 🥧', whisk_deco: '휘휘 저어요~ 🥄', mixing_bowl: '반죽을 만들어요 🥣',
+  popcorn_stand: '팝콘 냄새가 나요! 🍿', balloon_arch: '축하해요! 🎈', clown_deco: '재미있는 광대예요 🤡',
+  juggling_balls: '저글링 해볼까요? 🔴', unicycle_deco: '균형 잡기 어려워요! 🚲',
+  pet_hippo: '첨벙! 🦛', pet_zebra: '줄무늬가 멋져요 🦓', pet_kangaroo: '깡충깡충 뛰어요! 🦘',
+  pet_polar_bear: '눈 속에서 놀아요 🐻‍❄️', pet_toucan: '부리가 커요! 🦜', pet_ostrich: '빨리 달려요! 🦩',
 };
 const DEFAULT_REACTION = '✨';
 const reactionFor = (itemId) => ITEM_REACTIONS[itemId] || DEFAULT_REACTION;
@@ -158,6 +185,17 @@ const ITEM_SIZE = {
   holiday_wreath: 65, gift_boxes: 60, beach_umbrella: 100, surfboard: 100, seashell_collection: 50,
   // Third batch: pets
   pet_flamingo: 110, pet_peacock: 110, pet_llama: 120,
+  // Fourth batch: dino/robot/fairy/farm/ocean/art/bakery/circus furniture
+  fairy_house: 150, barn_deco: 170, circus_tent: 170, carousel_deco: 170, ferris_wheel_deco: 190,
+  lighthouse_deco: 160, mushroom_stool: 90, hay_bale: 100,
+  // Fourth batch: small decor
+  dino_egg_deco: 55, fossil_deco: 55, dino_bone_deco: 50, amber_deco: 45, dino_footprint_rug: 100,
+  circuit_board_deco: 55, gear_deco: 45, toadstool_deco: 45, potion_bottle: 45, glowing_mushroom: 45,
+  fairy_ring_rug: 100, milk_bucket: 45, egg_basket: 55, corn_deco: 45, pearl_deco: 40, bubble_deco: 45,
+  wave_deco: 55, paintbrush_deco: 45, clay_deco: 50, sketchpad_deco: 55, rolling_pin: 50, whisk_deco: 40,
+  mixing_bowl: 50, juggling_balls: 45,
+  // Fourth batch: pets
+  pet_hippo: 130, pet_polar_bear: 130, pet_kangaroo: 120,
 };
 const itemSizePx = (itemId) => ITEM_SIZE[itemId] || 96;
 
@@ -171,11 +209,12 @@ const SEATS = new Set([
   'recliner', 'chaise_lounge', 'ottoman', 'hanging_chair', 'papasan_chair', 'folding_chair',
   'picnic_bench', 'garden_bench', 'hammock_chair', 'sectional_sofa', 'loveseat', 'vanity_stool',
   'rocket_chair', 'throne_chair', 'cafe_chair', 'beach_chair', 'sled',
+  'mushroom_stool', 'hay_bale',
 ]);
 const LIE_DOWN = new Set([
   'bed_pink', 'bed_bunk', 'bed_cloud', 'bed_princess', 'bunk_ladder', 'hammock', 'tent_play',
   'crib', 'murphy_bed', 'daybed', 'futon', 'bunk_triple', 'canopy_bed',
-  'space_pod_bed', 'sleeping_bag', 'camping_tent',
+  'space_pod_bed', 'sleeping_bag', 'camping_tent', 'circus_tent',
 ]);
 const STAND_NEARBY = new Set([
   'desk_wood', 'desk_white', 'desk_gaming', 'mirror', 'vanity', 'table_round', 'table_square',
@@ -216,11 +255,25 @@ const STAND_NEARBY = new Set([
   'globe_stand', 'world_map', 'watering_can', 'flower_pot_large',
   'snowflake_deco', 'holiday_wreath', 'gift_boxes', 'beach_umbrella', 'surfboard', 'seashell_collection',
   'pet_llama', 'pet_flamingo', 'pet_peacock', 'pet_raccoon', 'pet_otter', 'pet_seal',
+  'fairy_house', 'barn_deco', 'carousel_deco', 'ferris_wheel_deco', 'lighthouse_deco',
+  'dino_egg_deco', 'volcano_deco', 'fossil_deco', 'dino_bone_deco', 'pteranodon_toy',
+  'triceratops_toy', 'trex_toy', 'prehistoric_plant', 'amber_deco',
+  'tablet_deco', 'vr_headset', 'drone_toy', 'robot_arm_deco', 'circuit_board_deco', 'gear_deco',
+  'laser_toy', 'hologram_deco',
+  'toadstool_deco', 'fairy_wings_deco', 'magic_wand_deco', 'potion_bottle', 'spellbook_deco', 'glowing_mushroom',
+  'scarecrow_deco', 'farm_fence', 'silo_deco', 'milk_bucket', 'egg_basket', 'corn_deco', 'pumpkin_patch',
+  'coral_deco', 'treasure_map', 'pearl_deco', 'anchor_deco', 'ship_wheel', 'mermaid_tail_deco',
+  'bubble_deco', 'wave_deco',
+  'paint_palette', 'paintbrush_deco', 'sculpture_deco', 'clay_deco', 'watercolor_deco', 'sketchpad_deco',
+  'oven_deco', 'rolling_pin', 'cupcake_stand', 'pie_deco', 'whisk_deco', 'mixing_bowl',
+  'popcorn_stand', 'balloon_arch', 'clown_deco', 'juggling_balls', 'unicycle_deco',
+  'pet_hippo', 'pet_zebra', 'pet_kangaroo', 'pet_polar_bear', 'pet_toucan', 'pet_ostrich',
 ]);
 // Rugs -- the avatar steps onto the middle of these rather than beside them.
 const STAND_ON = new Set([
   'starter_rug', 'rug_bear', 'rug_rainbow', 'rug_star', 'rug_heart', 'rug_dino',
   'rug_zebra', 'rug_polka', 'rug_geometric', 'yoga_mat',
+  'dino_footprint_rug', 'fairy_ring_rug',
 ]);
 const interactionTypeFor = (itemId) => {
   if (SEATS.has(itemId)) return 'sit';
@@ -307,6 +360,10 @@ const WALLPAPER_PATTERN = {
   wall_underwater: 'stripe',
   wall_school: 'dot',
   wall_farm: 'plank',
+  wall_jungle: 'dot',
+  wall_dinosaur: 'dot',
+  wall_robot: 'stripe',
+  wall_fairy: 'dot',
 };
 
 // Free starter items (see STORE_CATALOG on the server) laid out as fractions
