@@ -34,6 +34,10 @@ const KOREAN_WORDS = [
     '한국', '미국', '일본', '중국', '프랑스', '영국',
     '지렁이', '달팽이', '반딧불이',
     '낙타', '코뿔소', '두더지',
+    '청진기', '붕대', '체온계', '주사기', '여행가방', '여권', '호텔', '조이스틱',
+    '콘서트', '무대', '마이크', '스피커', '온도계',
+    '뛰기', '걷기', '앉기', '서기', '눕기', '웃음', '울음',
+    '꿈', '그림자', '메아리', '노을', '이슬', '서리', '우박',
 ];
 
 const KOREAN_PROVERBS = [
@@ -119,6 +123,16 @@ const KOREAN_PROVERBS = [
     { q: '밥 먹을 때는 개도 안 OOOO.', a: '때린다' },
     { q: '곳간에서 인심 OOOO.', a: '난다' },
     { q: '개똥밭에 굴러도 이승이 OOOO.', a: '좋다' },
+    { q: '아니 땐 굴뚝에 연기 OOOO.', a: '날까' },
+    { q: '말이 씨가 OOOO.', a: '된다' },
+    { q: '등치고 간 OOOO.', a: '빼먹는다' },
+    { q: '뛰는 놈 위에 나는 OO 있다.', a: '놈' },
+    { q: '첫 단추를 잘못 OOOO.', a: '끼우다' },
+    { q: '어물전 망신은 꼴뚜기가 OOOO.', a: '시킨다' },
+    { q: '눈 가리고 아웅 OOOO.', a: '한다' },
+    { q: '자라 보고 놀란 가슴 솥뚜껑 보고도 OOOO.', a: '놀란다' },
+    { q: '열 사람이 지켜도 도둑 하나를 못 OOOO.', a: '막는다' },
+    { q: '입은 삐뚤어져도 말은 바로 OOOO.', a: '해라' },
 ];
 
 const ENGLISH_VOCAB = [
@@ -189,6 +203,13 @@ const ENGLISH_VOCAB = [
     { w: 'China', m: '중국' }, { w: 'France', m: '프랑스' }, { w: 'England', m: '영국' },
     { w: 'Worm', m: '지렁이' }, { w: 'Snail', m: '달팽이' }, { w: 'Firefly', m: '반딧불이' },
     { w: 'Camel', m: '낙타' }, { w: 'Rhino', m: '코뿔소' }, { w: 'Mole', m: '두더지' },
+    { w: 'Stethoscope', m: '청진기' }, { w: 'Bandage', m: '붕대' }, { w: 'Thermometer', m: '체온계' }, { w: 'Syringe', m: '주사기' },
+    { w: 'Suitcase', m: '여행가방' }, { w: 'Passport', m: '여권' }, { w: 'Hotel', m: '호텔' },
+    { w: 'Joystick', m: '조이스틱' }, { w: 'Concert', m: '콘서트' }, { w: 'Stage', m: '무대' },
+    { w: 'Microphone', m: '마이크' }, { w: 'Speaker', m: '스피커' },
+    { w: 'Run', m: '뛰기' }, { w: 'Walk', m: '걷기' }, { w: 'Sit', m: '앉기' }, { w: 'Stand', m: '서기' },
+    { w: 'Sleep', m: '잠' }, { w: 'Dream', m: '꿈' }, { w: 'Shadow', m: '그림자' }, { w: 'Echo', m: '메아리' },
+    { w: 'Sunset', m: '노을' }, { w: 'Dew', m: '이슬' }, { w: 'Frost', m: '서리' }, { w: 'Hail', m: '우박' },
 ];
 
 const ENGLISH_GRAMMAR = [
@@ -321,6 +342,26 @@ const ENGLISH_GRAMMAR = [
     { q: 'I want to be an astronaut ___ I grow up.', a: 'when', options: ['when', 'where', 'what', 'who'] },
     { q: 'The rocket flew ___ into space.', a: 'up', options: ['up', 'down', 'left', 'right'] },
     { q: 'A rhino has a big ___.', a: 'horn', options: ['horn', 'wing', 'fin', 'tail'] },
+    { q: 'The doctor uses a ___ to listen to your heart.', a: 'stethoscope', options: ['stethoscope', 'thermometer', 'bandage', 'syringe'] },
+    { q: 'I put a ___ on my cut.', a: 'bandage', options: ['bandage', 'stethoscope', 'hotel', 'stage'] },
+    { q: 'We packed our ___ for the trip.', a: 'suitcase', options: ['suitcase', 'passport', 'hotel', 'concert'] },
+    { q: 'You need a ___ to travel to another country.', a: 'passport', options: ['passport', 'suitcase', 'hotel', 'ticket'] },
+    { q: 'We stayed at a nice ___ on our trip.', a: 'hotel', options: ['hotel', 'school', 'hospital', 'park'] },
+    { q: 'The singer stood on the ___.', a: 'stage', options: ['stage', 'chair', 'table', 'floor'] },
+    { q: 'I sing into the ___.', a: 'microphone', options: ['microphone', 'speaker', 'stage', 'ticket'] },
+    { q: 'I like to ___ in the park every morning.', a: 'run', options: ['run', 'sleep', 'sit', 'stand'] },
+    { q: 'Please ___ down and rest.', a: 'sit', options: ['sit', 'stand', 'run', 'walk'] },
+    { q: 'I had a nice ___ last night.', a: 'dream', options: ['dream', 'shadow', 'echo', 'sleep'] },
+    { q: 'My ___ follows me everywhere in the sun.', a: 'shadow', options: ['shadow', 'echo', 'dream', 'dew'] },
+    { q: 'I heard an ___ in the cave.', a: 'echo', options: ['echo', 'shadow', 'dream', 'dew'] },
+    { q: 'The ___ was orange and pink in the sky.', a: 'sunset', options: ['sunset', 'dew', 'frost', 'hail'] },
+    { q: 'In winter, ___ falls from the sky.', a: 'hail', options: ['hail', 'dew', 'sunset', 'shadow'] },
+    { q: 'The grass was wet with morning ___.', a: 'dew', options: ['dew', 'hail', 'sunset', 'shadow'] },
+    { q: "It's so cold, there is ___ on the window.", a: 'frost', options: ['frost', 'dew', 'hail', 'sunset'] },
+    { q: 'I ___ to school every morning.', a: 'walk', options: ['walk', 'run', 'sleep', 'sit'] },
+    { q: 'Please ___ up and say hello.', a: 'stand', options: ['stand', 'sit', 'sleep', 'run'] },
+    { q: 'The nurse gave me a ___.', a: 'thermometer', options: ['thermometer', 'syringe', 'bandage', 'stethoscope'] },
+    { q: 'We played video games with a ___.', a: 'joystick', options: ['joystick', 'microphone', 'stethoscope', 'passport'] },
 ];
 
 const seed = () => {
