@@ -128,6 +128,26 @@ const ITEM_REACTIONS = {
   juggling_balls: '저글링 해볼까요? 🔴', unicycle_deco: '균형 잡기 어려워요! 🚲',
   pet_hippo: '첨벙! 🦛', pet_zebra: '줄무늬가 멋져요 🦓', pet_kangaroo: '깡충깡충 뛰어요! 🦘',
   pet_polar_bear: '눈 속에서 놀아요 🐻‍❄️', pet_toucan: '부리가 커요! 🦜', pet_ostrich: '빨리 달려요! 🦩',
+  hospital_bed: '푹 쉬면 나아요 🛏️', wheelchair: '씽씽 굴러가요 ♿', dentist_chair: '아~ 입을 벌려요 🦷',
+  ice_rink: '쓩쓩 스케이트 타요! ⛸️', winter_cabin: '따뜻한 오두막이에요 🏔️', pool_deco: '첨벙첨벙 수영해요! 🏊',
+  diving_board: '풍덩! 다이빙! 🤿', concert_stage: '노래해볼까요? 🎤', dj_booth: '신나는 음악을 틀어요 🎧',
+  garden_shed: '도구들이 있어요 🏚️', planetarium_dome: '별을 관찰해요! 🔭',
+  stethoscope_deco: '숨 크게 쉬어보세요 🩺', bandage_deco: '다친 곳에 붙여요 🩹', medicine_bottle: '약을 먹어요 💊',
+  first_aid_kit: '다치면 여기서 꺼내요 🧰', syringe_toy: '주사 무섭지 않아요! 💉', eye_chart: '어떤 글자가 보여요? 👁️',
+  x_ray_deco: '뼈가 보여요! 🦴', microscope_deco: '작은 것도 크게 봐요 🔬', test_tube_deco: '실험해볼까요? 🧪',
+  beaker_deco: '무엇을 섞을까요? ⚗️', periodic_table_deco: '원소를 배워요 🧬', magnet_deco: '찰싹 붙어요! 🧲',
+  robot_kit_deco: '로봇을 조립해요! 🤖', ski_deco: '슝~ 스키 타요! 🎿', snowboard_deco: '멋지게 타볼까요? 🏂',
+  hockey_puck: '탁! 쳐볼까요? ⚫', ski_poles: '균형을 잡아요 🎿', hot_cocoa_deco: '따뜻하고 달콤해요~ ☕',
+  suitcase_deco: '여행 가자! 🧳', passport_deco: '여행 준비 완료! 📘', airplane_ticket: '비행기 타러 가요! 🎫',
+  eiffel_tower_deco: '프랑스에 왔어요! 🗼', pyramid_deco: '이집트 여행이에요! 🔺', postcard_deco: '편지를 보내요 💌',
+  joystick_deco: '게임하자! 🕹️', controller_deco: '같이 게임할까요? 🎮', game_trophy_deco: '최고 점수예요! 🏆',
+  shovel_deco: '땅을 파볼까요? 🥄', rake_deco: '낙엽을 모아요 🧹', seed_packet: '씨앗을 심어요 🌱',
+  garden_hose: '물을 뿌려요! 🚿', inflatable_ring: '둥둥 떠다녀요 🍩', life_ring: '안전하게 수영해요 🛟',
+  pool_noodle: '물놀이 재밌다! 🍢', sunscreen_deco: '햇빛을 막아줘요 🧴',
+  spotlight_deco: '무대가 환해져요! 🔦', dj_turntable: '스크래치! 💿', amplifier_deco: '소리가 커져요! 🔊',
+  band_poster: '멋진 밴드예요 🖼️', drum_sticks: '두드려볼까요? 🥢',
+  pet_giraffe: '목이 길어요! 🦒', pet_alpaca: '보들보들해요 🦙', pet_lemur: '눈이 커요! 🐒',
+  pet_meerkat: '두리번두리번 🐿️', pet_wolf: '아우우~ 🐺', pet_deer: '뿔이 멋져요 🦌',
 };
 const DEFAULT_REACTION = '✨';
 const reactionFor = (itemId) => ITEM_REACTIONS[itemId] || DEFAULT_REACTION;
@@ -196,6 +216,15 @@ const ITEM_SIZE = {
   mixing_bowl: 50, juggling_balls: 45,
   // Fourth batch: pets
   pet_hippo: 130, pet_polar_bear: 130, pet_kangaroo: 120,
+  // Fifth batch: hospital/science/winter/travel/pool/concert furniture
+  hospital_bed: 160, winter_cabin: 170, pool_deco: 190, concert_stage: 180, dj_booth: 130,
+  garden_shed: 150, planetarium_dome: 160, wheelchair: 100, dentist_chair: 110, ice_rink: 180,
+  diving_board: 130,
+  // Fifth batch: small decor
+  bandage_deco: 40, medicine_bottle: 45, syringe_toy: 40, hockey_puck: 35, postcard_deco: 45,
+  hot_cocoa_deco: 45, seed_packet: 40, sunscreen_deco: 40, drum_sticks: 40, pool_noodle: 45,
+  // Fifth batch: pets
+  pet_giraffe: 140, pet_meerkat: 90,
 };
 const itemSizePx = (itemId) => ITEM_SIZE[itemId] || 96;
 
@@ -209,12 +238,12 @@ const SEATS = new Set([
   'recliner', 'chaise_lounge', 'ottoman', 'hanging_chair', 'papasan_chair', 'folding_chair',
   'picnic_bench', 'garden_bench', 'hammock_chair', 'sectional_sofa', 'loveseat', 'vanity_stool',
   'rocket_chair', 'throne_chair', 'cafe_chair', 'beach_chair', 'sled',
-  'mushroom_stool', 'hay_bale',
+  'mushroom_stool', 'hay_bale', 'wheelchair', 'dentist_chair',
 ]);
 const LIE_DOWN = new Set([
   'bed_pink', 'bed_bunk', 'bed_cloud', 'bed_princess', 'bunk_ladder', 'hammock', 'tent_play',
   'crib', 'murphy_bed', 'daybed', 'futon', 'bunk_triple', 'canopy_bed',
-  'space_pod_bed', 'sleeping_bag', 'camping_tent', 'circus_tent',
+  'space_pod_bed', 'sleeping_bag', 'camping_tent', 'circus_tent', 'hospital_bed',
 ]);
 const STAND_NEARBY = new Set([
   'desk_wood', 'desk_white', 'desk_gaming', 'mirror', 'vanity', 'table_round', 'table_square',
@@ -268,6 +297,18 @@ const STAND_NEARBY = new Set([
   'oven_deco', 'rolling_pin', 'cupcake_stand', 'pie_deco', 'whisk_deco', 'mixing_bowl',
   'popcorn_stand', 'balloon_arch', 'clown_deco', 'juggling_balls', 'unicycle_deco',
   'pet_hippo', 'pet_zebra', 'pet_kangaroo', 'pet_polar_bear', 'pet_toucan', 'pet_ostrich',
+  'ice_rink', 'winter_cabin', 'pool_deco', 'diving_board', 'concert_stage', 'dj_booth',
+  'garden_shed', 'planetarium_dome',
+  'stethoscope_deco', 'bandage_deco', 'medicine_bottle', 'first_aid_kit', 'syringe_toy',
+  'eye_chart', 'x_ray_deco', 'microscope_deco', 'test_tube_deco', 'beaker_deco',
+  'periodic_table_deco', 'magnet_deco', 'robot_kit_deco',
+  'ski_deco', 'snowboard_deco', 'hockey_puck', 'ski_poles', 'hot_cocoa_deco',
+  'suitcase_deco', 'passport_deco', 'airplane_ticket', 'eiffel_tower_deco', 'pyramid_deco', 'postcard_deco',
+  'joystick_deco', 'controller_deco', 'game_trophy_deco',
+  'shovel_deco', 'rake_deco', 'seed_packet', 'garden_hose',
+  'inflatable_ring', 'life_ring', 'pool_noodle', 'sunscreen_deco',
+  'spotlight_deco', 'dj_turntable', 'amplifier_deco', 'band_poster', 'drum_sticks',
+  'pet_giraffe', 'pet_alpaca', 'pet_lemur', 'pet_meerkat', 'pet_wolf', 'pet_deer',
 ]);
 // Rugs -- the avatar steps onto the middle of these rather than beside them.
 const STAND_ON = new Set([
@@ -364,6 +405,10 @@ const WALLPAPER_PATTERN = {
   wall_dinosaur: 'dot',
   wall_robot: 'stripe',
   wall_fairy: 'dot',
+  wall_hospital: 'dot',
+  wall_winter: 'stripe',
+  wall_concert: 'star',
+  wall_lab: 'plank',
 };
 
 // Free starter items (see STORE_CATALOG on the server) laid out as fractions
