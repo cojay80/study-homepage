@@ -148,6 +148,27 @@ const ITEM_REACTIONS = {
   band_poster: '멋진 밴드예요 🖼️', drum_sticks: '두드려볼까요? 🥢',
   pet_giraffe: '목이 길어요! 🦒', pet_alpaca: '보들보들해요 🦙', pet_lemur: '눈이 커요! 🐒',
   pet_meerkat: '두리번두리번 🐿️', pet_wolf: '아우우~ 🐺', pet_deer: '뿔이 멋져요 🦌',
+  hero_command_center: '출동 준비! 🦸', photo_backdrop: '사진 찍자! 📸', vending_machine: '음료수 뽑아요~ 🥤',
+  gumball_machine: '뭐가 나올까요? 🍬', igloo_furniture: '따뜻해요~ 🧊', oasis_tent: '사막 여행 중이에요 🏕️',
+  camera_tripod_stand: '찰칵! 사진 찍어요 📷', toy_store_shelf: '장난감이 가득해요! 🧸',
+  snow_fort: '눈싸움 준비 완료! ⛄', desert_oasis_pool: '시원한 오아시스예요 🏝️',
+  cape_stand: '망토를 걸쳐요! 🦸', hero_mask_display: '가면을 써볼까요? 🎭', comic_book_stack: '만화책 읽어요 📚',
+  superhero_logo_deco: '변신! 💥', utility_belt_deco: '도구가 가득해요 🥋', power_ring_deco: '힘이 솟아나요! 💍',
+  tripod_deco: '카메라를 세워요 📸', flash_light_photo: '번쩍! 📸', photo_album: '추억을 모아요 📔',
+  film_roll_deco: '옛날 카메라 필름이에요 🎞️', polaroid_deco: '바로 인화돼요! 🖼️', camera_lens_deco: '자세히 보여요 🔎',
+  toy_train_deco: '칙칙폭폭~ 🚂', spinning_top_deco: '빙글빙글 돌아요 🌀', jack_in_box: '짠! 놀랐죠? 📦',
+  marble_deco: '데굴데굴 굴러가요 🔮', dice_deco: '주사위를 굴려요! 🎲', domino_deco: '와르르 무너져요 🁢',
+  rubber_duck_deco: '삑삑! 🦆',
+  weather_vane: '바람이 부는 방향이에요 🌬️', thermometer_outdoor: '오늘 몇 도일까요? 🌡️',
+  umbrella_stand: '우산을 꽂아요 ☂️', rain_gauge: '비가 얼마나 왔을까요? 🌧️',
+  cloud_deco: '뭉게뭉게 구름이에요 ☁️', lightning_deco: '번쩍! 조심해요 ⚡',
+  igloo_deco: '이누이트의 집이에요 🧊', ice_sculpture_deco: '차가운 예술 작품이에요 🧊',
+  snow_shovel: '눈을 치워요! 🥄', arctic_flag: '북극 탐험대예요! 🚩', penguin_statue: '뒤뚱뒤뚱 펭귄이에요 🐧',
+  icicle_deco: '뾰족뾰족해요! 🧊',
+  oasis_deco: '사막의 오아시스예요 🌴', sand_dune_deco: '모래 언덕이에요 🏜️', camel_saddle: '낙타를 타볼까요? 🐫',
+  desert_lantern: '어둠을 밝혀줘요 🏮', cactus_flower_deco: '선인장에 꽃이 폈어요! 🌵',
+  pet_reindeer: '썰매를 끌어요! 🦌', pet_arctic_fox: '하얀 털이 예뻐요 🦊', pet_walrus: '어흥~ 🦣',
+  pet_seahorse: '살랑살랑 헤엄쳐요 🐠', pet_bat: '거꾸로 매달려요! 🦇',
 };
 const DEFAULT_REACTION = '✨';
 const reactionFor = (itemId) => ITEM_REACTIONS[itemId] || DEFAULT_REACTION;
@@ -225,6 +246,15 @@ const ITEM_SIZE = {
   hot_cocoa_deco: 45, seed_packet: 40, sunscreen_deco: 40, drum_sticks: 40, pool_noodle: 45,
   // Fifth batch: pets
   pet_giraffe: 140, pet_meerkat: 90,
+  // Sixth batch: superhero/photo/toy/weather/arctic/desert furniture
+  hero_command_center: 170, igloo_furniture: 150, oasis_tent: 160, snow_fort: 150,
+  desert_oasis_pool: 180, toy_store_shelf: 130, photo_backdrop: 140, vending_machine: 120,
+  gumball_machine: 90, camera_tripod_stand: 90,
+  // Sixth batch: small decor
+  marble_deco: 35, dice_deco: 40, spinning_top_deco: 40, rubber_duck_deco: 45, icicle_deco: 40,
+  film_roll_deco: 40, polaroid_deco: 45,
+  // Sixth batch: pets
+  pet_walrus: 140, pet_seahorse: 70,
 };
 const itemSizePx = (itemId) => ITEM_SIZE[itemId] || 96;
 
@@ -244,6 +274,7 @@ const LIE_DOWN = new Set([
   'bed_pink', 'bed_bunk', 'bed_cloud', 'bed_princess', 'bunk_ladder', 'hammock', 'tent_play',
   'crib', 'murphy_bed', 'daybed', 'futon', 'bunk_triple', 'canopy_bed',
   'space_pod_bed', 'sleeping_bag', 'camping_tent', 'circus_tent', 'hospital_bed',
+  'igloo_furniture', 'oasis_tent',
 ]);
 const STAND_NEARBY = new Set([
   'desk_wood', 'desk_white', 'desk_gaming', 'mirror', 'vanity', 'table_round', 'table_square',
@@ -309,6 +340,17 @@ const STAND_NEARBY = new Set([
   'inflatable_ring', 'life_ring', 'pool_noodle', 'sunscreen_deco',
   'spotlight_deco', 'dj_turntable', 'amplifier_deco', 'band_poster', 'drum_sticks',
   'pet_giraffe', 'pet_alpaca', 'pet_lemur', 'pet_meerkat', 'pet_wolf', 'pet_deer',
+  'hero_command_center', 'photo_backdrop', 'vending_machine', 'gumball_machine',
+  'camera_tripod_stand', 'toy_store_shelf', 'snow_fort', 'desert_oasis_pool',
+  'cape_stand', 'hero_mask_display', 'comic_book_stack', 'superhero_logo_deco',
+  'utility_belt_deco', 'power_ring_deco',
+  'tripod_deco', 'flash_light_photo', 'photo_album', 'film_roll_deco', 'polaroid_deco', 'camera_lens_deco',
+  'toy_train_deco', 'spinning_top_deco', 'jack_in_box', 'marble_deco', 'dice_deco', 'domino_deco',
+  'rubber_duck_deco',
+  'weather_vane', 'thermometer_outdoor', 'umbrella_stand', 'rain_gauge', 'cloud_deco', 'lightning_deco',
+  'igloo_deco', 'ice_sculpture_deco', 'snow_shovel', 'arctic_flag', 'penguin_statue', 'icicle_deco',
+  'oasis_deco', 'sand_dune_deco', 'camel_saddle', 'desert_lantern', 'cactus_flower_deco',
+  'pet_reindeer', 'pet_arctic_fox', 'pet_walrus', 'pet_seahorse', 'pet_bat',
 ]);
 // Rugs -- the avatar steps onto the middle of these rather than beside them.
 const STAND_ON = new Set([
@@ -409,6 +451,10 @@ const WALLPAPER_PATTERN = {
   wall_winter: 'stripe',
   wall_concert: 'star',
   wall_lab: 'plank',
+  wall_superhero: 'dot',
+  wall_photography: 'stripe',
+  wall_arctic: 'star',
+  wall_desert: 'stripe',
 };
 
 // Free starter items (see STORE_CATALOG on the server) laid out as fractions
