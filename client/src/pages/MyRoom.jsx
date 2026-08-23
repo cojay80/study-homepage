@@ -153,6 +153,8 @@ const WALLPAPER_PATTERN = {
   wall_ocean: 'stripe',
   wall_flower: 'dot',
   wall_rainbow: 'stripe',
+  wall_star: 'star',
+  wall_space: 'star',
 };
 
 // Free starter items (see STORE_CATALOG on the server) laid out as fractions
@@ -262,6 +264,18 @@ const MyRoom = () => {
     }
     if (pattern === 'plank') {
       return { backgroundImage: 'repeating-linear-gradient(90deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 3px, transparent 3px, transparent 70px)' };
+    }
+    if (pattern === 'star') {
+      return {
+        backgroundImage: `
+          radial-gradient(1.5px 1.5px at 20% 30%, rgba(255,255,255,0.9) 50%, transparent 51%),
+          radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.7) 50%, transparent 51%),
+          radial-gradient(1.5px 1.5px at 80% 20%, rgba(255,255,255,0.85) 50%, transparent 51%),
+          radial-gradient(1px 1px at 35% 85%, rgba(255,255,255,0.6) 50%, transparent 51%),
+          radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.75) 50%, transparent 51%)
+        `,
+        backgroundSize: '120px 120px',
+      };
     }
     return {};
   }, [wallpaperId]);
