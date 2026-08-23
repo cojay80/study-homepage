@@ -66,6 +66,20 @@ const STORE_CATALOG = [
   { id: 'bunk_ladder', name: '2단 선반 침대', type: 'furniture', price: 850, icon: '🪜' },
   { id: 'stool_round', name: '동그란 스툴', type: 'furniture', price: 120, icon: '🟤' },
   { id: 'cabinet_tv', name: 'TV 장식장', type: 'furniture', price: 400, icon: '📺' },
+  { id: 'table_dining', name: '다이닝 테이블', type: 'furniture', price: 320, icon: '🍽️' },
+  { id: 'chair_office', name: '사무 의자', type: 'furniture', price: 280, icon: '💺' },
+  { id: 'beanbag', name: '빈백 소파', type: 'furniture', price: 300, icon: '🛋️' },
+  { id: 'rocking_chair', name: '흔들의자', type: 'furniture', price: 260, icon: '🪑' },
+  { id: 'crib', name: '아기 침대', type: 'furniture', price: 450, icon: '👶' },
+  { id: 'dresser', name: '서랍장', type: 'furniture', price: 380, icon: '🗄️' },
+  { id: 'sink_bathroom', name: '세면대', type: 'furniture', price: 300, icon: '🚰' },
+  { id: 'toilet', name: '변기', type: 'furniture', price: 250, icon: '🚽' },
+  { id: 'shower_stall', name: '샤워부스', type: 'furniture', price: 450, icon: '🚿' },
+  { id: 'swing_indoor', name: '실내 그네', type: 'furniture', price: 400, icon: '🎠' },
+  { id: 'slide_indoor', name: '미끄럼틀', type: 'furniture', price: 500, icon: '🛝' },
+  { id: 'picnic_table', name: '피크닉 테이블', type: 'furniture', price: 280, icon: '🧺' },
+  { id: 'hot_tub', name: '온수 욕조', type: 'furniture', price: 650, icon: '♨️' },
+  { id: 'changing_table', name: '기저귀 교환대', type: 'furniture', price: 300, icon: '🍼' },
 
   // Decor
   { id: 'rug_bear', name: '곰돌이 러그', type: 'decor', price: 200, icon: '🧸' },
@@ -105,6 +119,20 @@ const STORE_CATALOG = [
   { id: 'skateboard', name: '스케이트보드', type: 'decor', price: 350, icon: '🛹' },
   { id: 'cupcake_deco', name: '컵케이크 장식', type: 'decor', price: 80, icon: '🧁' },
   { id: 'medal', name: '메달', type: 'decor', price: 400, icon: '🥇' },
+  { id: 'mobile_hanging', name: '모빌', type: 'decor', price: 130, icon: '🎐' },
+  { id: 'fan_ceiling', name: '천장 선풍기', type: 'decor', price: 200, icon: '🌀' },
+  { id: 'rug_dino', name: '공룡 러그', type: 'decor', price: 260, icon: '🦕' },
+  { id: 'curtain_set', name: '커튼', type: 'decor', price: 180, icon: '🪟' },
+  { id: 'shelf_display', name: '진열 선반', type: 'decor', price: 220, icon: '🏺' },
+  { id: 'piggy_bank', name: '돼지 저금통', type: 'decor', price: 150, icon: '🐷' },
+  { id: 'alarm_clock', name: '알람시계', type: 'decor', price: 100, icon: '⏰' },
+  { id: 'teddy_giant', name: '대형 곰인형', type: 'decor', price: 400, icon: '🧸' },
+  { id: 'star_projector', name: '별자리 조명', type: 'decor', price: 350, icon: '🌠' },
+  { id: 'bubble_machine', name: '비눗방울 기계', type: 'decor', price: 280, icon: '🫧' },
+  { id: 'easel_paint', name: '그림 이젤', type: 'decor', price: 250, icon: '🎨' },
+  { id: 'xylophone', name: '실로폰', type: 'decor', price: 220, icon: '🎵' },
+  { id: 'drum_set', name: '드럼 세트', type: 'decor', price: 500, icon: '🥁' },
+  { id: 'beach_ball', name: '비치볼', type: 'decor', price: 90, icon: '🏖️' },
 
   // Clothing
   { id: 'hat_cap', name: '캡모자', type: 'clothing', price: 150, icon: '/assets/toca_hat_cap.png', isImage: true },
@@ -139,6 +167,10 @@ const STORE_CATALOG = [
   { id: 'pet_fish', name: '금붕어', type: 'pet', price: 250, icon: '🐟' },
   { id: 'pet_turtle', name: '거북이', type: 'pet', price: 450, icon: '🐢' },
   { id: 'pet_unicorn', name: '유니콘', type: 'pet', price: 1000, icon: '🦄' },
+  { id: 'pet_fox', name: '여우', type: 'pet', price: 500, icon: '🦊' },
+  { id: 'pet_penguin', name: '펭귄', type: 'pet', price: 550, icon: '🐧' },
+  { id: 'pet_panda', name: '판다', type: 'pet', price: 700, icon: '🐼' },
+  { id: 'pet_hedgehog', name: '고슴도치', type: 'pet', price: 350, icon: '🦔' },
 ];
 
 const CATALOG_BY_ID = new Map(STORE_CATALOG.map((i) => [i.id, i]));

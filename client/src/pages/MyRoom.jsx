@@ -34,7 +34,18 @@ const ITEM_REACTIONS = {
   camera: '치즈~ 찰칵! 📸', basketball: '슛! 골인! 🏀', skateboard: '휭~ 타볼까? 🛹',
   cupcake_deco: '맛있겠다! 🧁',
   starter_rug: '포근해요~ 🧶', rug_bear: '푹신푹신해요 🧸', rug_rainbow: '무지개색이에요! 🌈',
-  rug_star: '별이 반짝여요 ⭐', rug_heart: '하트 모양이에요 💗',
+  rug_star: '별이 반짝여요 ⭐', rug_heart: '하트 모양이에요 💗', rug_dino: '쿵쿵 공룡이다! 🦕',
+  table_dining: '같이 밥 먹어요! 🍽️', chair_office: '일하는 척! 💼', beanbag: '푹신푹신~ 🛋️',
+  rocking_chair: '흔들흔들~ 🌀', crib: '쿨쿨.. 아기가 자요 👶', dresser: '옷 정리하자! 👕',
+  sink_bathroom: '손 씻어요! 🧼', toilet: '화장실 다녀올게요! 🚽', shower_stall: '샤워하자! 🚿',
+  swing_indoor: '그네 타요~ 🎠', slide_indoor: '슝~ 미끄럼틀! 🛝', picnic_table: '소풍 가자! 🧺',
+  hot_tub: '따뜻해요~ ♨️', changing_table: '기저귀 갈아요~ 🍼',
+  mobile_hanging: '빙글빙글 돌아가요 🎐', fan_ceiling: '시원해요~ 🌀', curtain_set: '살랑살랑~ 🪟',
+  shelf_display: '멋진 진열장이에요! 🏺', piggy_bank: '저금하자! 🐷', alarm_clock: '일어날 시간이에요! ⏰',
+  teddy_giant: '커다란 곰인형이에요! 🧸', star_projector: '별빛이 반짝여요 🌠',
+  bubble_machine: '보글보글 비눗방울! 🫧', easel_paint: '그림 그려볼까? 🎨', xylophone: '딩동댕~ 🎵',
+  drum_set: '둥둥둥! 🥁', beach_ball: '같이 놀자! 🏖️',
+  pet_fox: '캥캥! 🦊', pet_penguin: '뒤뚱뒤뚱~ 🐧', pet_panda: '대나무 먹어요 🐼', pet_hedgehog: '따끔따끔 귀여워요 🦔',
 };
 const DEFAULT_REACTION = '✨';
 const reactionFor = (itemId) => ITEM_REACTIONS[itemId] || DEFAULT_REACTION;
@@ -47,15 +58,21 @@ const ITEM_SIZE = {
   sofa_red: 160, sofa_blue: 160, sofa_corner: 170, wardrobe: 170, wardrobe_pink: 170,
   piano: 180, kitchen_set: 170, bathtub: 160, cabinet_tv: 140, bookcase_tall: 160,
   aquarium: 130, tent_play: 160,
+  hot_tub: 170, slide_indoor: 170, swing_indoor: 150, crib: 140, teddy_giant: 130,
   // Large
   desk_wood: 120, desk_white: 120, desk_gaming: 120, table_round: 110, table_square: 110,
   shelf_books: 130, shelf_toy: 120, starter_shelf: 110, mirror: 110, vanity: 120, hammock: 150,
+  table_dining: 130, picnic_table: 130, shower_stall: 130, dresser: 130, changing_table: 120,
+  shelf_display: 100,
   // Seats -- sized so the avatar reads as sitting on/in them
   chair_wood: 100, chair_gaming: 110, starter_chair: 100, stool_round: 80, bench_window: 110,
-  sofa_bean: 100,
+  sofa_bean: 100, chair_office: 100, beanbag: 110, rocking_chair: 105,
   // Small decor
   candle: 50, medal: 55, cupcake_deco: 50, toy_yoyo: 50, basketball: 55, picture_frame: 60,
   clock_wall: 65, plant_pot: 65, plant_cactus: 55, ribbon_red: 40,
+  sink_bathroom: 100, toilet: 85, mobile_hanging: 55, fan_ceiling: 60, alarm_clock: 45,
+  piggy_bank: 55, star_projector: 65, bubble_machine: 70, easel_paint: 75, xylophone: 65,
+  drum_set: 80, beach_ball: 55, curtain_set: 70, rug_dino: 110,
 };
 const itemSizePx = (itemId) => ITEM_SIZE[itemId] || 96;
 
@@ -65,9 +82,11 @@ const itemSizePx = (itemId) => ITEM_SIZE[itemId] || 96;
 const SEATS = new Set([
   'chair_wood', 'chair_gaming', 'starter_chair', 'stool_round', 'bench_window',
   'sofa_red', 'sofa_blue', 'sofa_corner',
+  'chair_office', 'beanbag', 'rocking_chair', 'swing_indoor', 'teddy_giant',
 ]);
 const LIE_DOWN = new Set([
   'bed_pink', 'bed_bunk', 'bed_cloud', 'bed_princess', 'bunk_ladder', 'hammock', 'tent_play',
+  'crib',
 ]);
 const STAND_NEARBY = new Set([
   'desk_wood', 'desk_white', 'desk_gaming', 'mirror', 'vanity', 'table_round', 'table_square',
@@ -80,9 +99,14 @@ const STAND_NEARBY = new Set([
   'clock_wall', 'picture_frame', 'candle', 'camera', 'basketball', 'skateboard', 'cupcake_deco',
   'toy_robot', 'toy_car', 'toy_dino', 'toy_unicorn', 'toy_bear', 'toy_blocks', 'toy_yoyo',
   'trophy', 'medal', 'balloons', 'headphones',
+  'table_dining', 'dresser', 'sink_bathroom', 'toilet', 'shower_stall', 'picnic_table',
+  'hot_tub', 'changing_table', 'mobile_hanging', 'fan_ceiling', 'curtain_set', 'shelf_display',
+  'piggy_bank', 'alarm_clock', 'star_projector', 'bubble_machine', 'easel_paint', 'xylophone',
+  'drum_set', 'beach_ball', 'slide_indoor',
+  'pet_fox', 'pet_penguin', 'pet_panda', 'pet_hedgehog',
 ]);
 // Rugs -- the avatar steps onto the middle of these rather than beside them.
-const STAND_ON = new Set(['starter_rug', 'rug_bear', 'rug_rainbow', 'rug_star', 'rug_heart']);
+const STAND_ON = new Set(['starter_rug', 'rug_bear', 'rug_rainbow', 'rug_star', 'rug_heart', 'rug_dino']);
 const interactionTypeFor = (itemId) => {
   if (SEATS.has(itemId)) return 'sit';
   if (LIE_DOWN.has(itemId)) return 'lie';
