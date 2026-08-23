@@ -27,6 +27,8 @@ const STORIES = [
     { id: 'JyqquUYtvN0', title: '개미와 베짱이 (이솝이야기)', category: 'story', url: 'https://www.youtube.com/embed/JyqquUYtvN0' },
     { id: 'o9oO3qMWrSc', title: '신데렐라 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/o9oO3qMWrSc' },
     { id: 'j5_0BaMNpqw', title: '개와 고양이 (전래동화)', category: 'story', url: 'https://www.youtube.com/embed/j5_0BaMNpqw' },
+    { id: '0fxVIRxNIK4', title: '금도끼 은도끼 (전래동화)', category: 'story', url: 'https://www.youtube.com/embed/0fxVIRxNIK4' },
+    { id: 'M5rO-vesorw', title: '은혜 갚은 까치 (전래동화)', category: 'story', url: 'https://www.youtube.com/embed/M5rO-vesorw' },
 
     // Dance/Gymnastics (율동 동요)
     { id: 'ZAmVVIJ1I9E', title: '호이 호이! 알록달록 상어가족', category: 'dance', url: 'https://www.youtube.com/embed/ZAmVVIJ1I9E' },

@@ -29,6 +29,7 @@ const SONGS = [
     { id: 'DZF06J5Ahzw', title: '나는야 공룡 요리사', category: 'popular', color: 'bg-lime-400' },
     { id: '_kxuz2CnxRg', title: '우리 가족 사랑해 동요', category: 'popular', color: 'bg-rose-300' },
     { id: 'Odn2oiS3tXE', title: '무지개 색깔 동요 모음집', category: 'popular', color: 'bg-fuchsia-300' },
+    { id: '28qy61jknN4', title: '브람스 자장가', category: 'popular', color: 'bg-indigo-200' },
 
     // Math
     { id: 'amOjQsKqw6k', title: '숫자 쓰기', category: 'math', color: 'bg-green-400' },

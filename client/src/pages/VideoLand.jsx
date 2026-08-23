@@ -43,6 +43,8 @@ const VIDEOS = [
     { id: 'KC89qOB8MKA', title: '찬바람에 터진 콧물댐', url: 'https://www.youtube.com/embed/KC89qOB8MKA' },
     { id: '9wZepHboQlk', title: '전기를 만드는 콧바람', url: 'https://www.youtube.com/embed/9wZepHboQlk' },
     { id: 'a8vwgVEIf2Y', title: '코털장군의 숨쉬기 작전', url: 'https://www.youtube.com/embed/a8vwgVEIf2Y' },
+    { id: 'BoRdkn012gI', title: '주름을 막는 피부체조팀', url: 'https://www.youtube.com/embed/BoRdkn012gI' },
+    { id: 'p8vx5Xee1q8', title: '흰머리는 왜 날까', url: 'https://www.youtube.com/embed/p8vx5Xee1q8' },
 ];
 
 const VideoLand = () => {
