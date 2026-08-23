@@ -6,31 +6,35 @@ import { CloudIcon } from '../components/Assets';
 
 const MotionDiv = motion.div;
 
-// Song Data (Curated List)
+// Song Data (Curated List) -- every id below has been verified against the
+// YouTube oEmbed API so the title/category shown actually matches the video.
 const SONGS = [
     // Popular
     { id: 'XqZsoesa55w', title: '상어 가족 (Baby Shark)', category: 'popular', color: 'bg-blue-400' },
-    { id: '761ae_KDg_Q', title: '반짝반짝 작은 별', category: 'popular', color: 'bg-yellow-400' },
     { id: 'cyJgx5kFAfI', title: '바나나 차차', category: 'popular', color: 'bg-purple-400' },
-    { id: 'cyVzjoj96vs', title: '뽀로로 오프닝', category: 'popular', color: 'bg-blue-500' },
+    { id: 'E0W5sJZ2d64', title: '뽀로로 오프닝', category: 'popular', color: 'bg-blue-500' },
     { id: 'L0MK7qz13bU', title: 'Let It Go (겨울왕국)', category: 'popular', color: 'bg-cyan-400' },
+    { id: 'tIRul7vW_b0', title: '작은 별', category: 'popular', color: 'bg-yellow-400' },
+    { id: 'VSNPr2ydsE0', title: '나비야', category: 'popular', color: 'bg-pink-300' },
+    { id: 'M2cgndHuG04', title: '동물의 왕 사자', category: 'popular', color: 'bg-orange-400' },
 
     // Math
-    { id: '6Gr7p29e6QA', title: '핑크퐁 인기 동요 모음', category: 'math', color: 'bg-green-400' }, // Using compilation as fallback for specific songs
-    { id: '2HEfl2wHQ-w', title: '핑크퐁 베스트 동요', category: 'math', color: 'bg-green-500' },
+    { id: 'amOjQsKqw6k', title: '숫자 쓰기', category: 'math', color: 'bg-green-400' },
+    { id: 'b2hNcf3QAyk', title: '숫자 모양송', category: 'math', color: 'bg-green-500' },
+    { id: 'oJXpXiiXSyA', title: '시계송 (1초 1분 1시간)', category: 'math', color: 'bg-emerald-400' },
+    { id: 'pT6fKuzTrXY', title: '아기상어와 숫자송', category: 'math', color: 'bg-teal-400' },
+    { id: 'lcl8uB2AWM0', title: 'Shapes Are All Around', category: 'math', color: 'bg-lime-500' },
 
     // English
-    { id: 'J8Lwfg7gpdc', title: 'Baby Shark & Spring Songs', category: 'english', color: 'bg-pink-400' },
-    { id: '_UR-l3QI2nE', title: 'Baby Shark (English)', category: 'english', color: 'bg-pink-500' },
-
-    // Korean
-    { id: 'kcZTYZDx5_c', title: '인기 동요 모음', category: 'popular', color: 'bg-orange-400' },
+    { id: '_UR-l3QI2nE', title: 'ABC Song', category: 'english', color: 'bg-pink-500' },
+    { id: 'afZuyN3L7-w', title: 'Old MacDonald Had a Farm', category: 'english', color: 'bg-rose-400' },
+    { id: 'HVDY3GxjivY', title: 'The Wheels on the Bus', category: 'english', color: 'bg-fuchsia-400' },
+    { id: 'eT2rHegFiyA', title: 'Learn Colors with Color Hero', category: 'english', color: 'bg-violet-400' },
 ];
 
 const CATEGORIES = [
     { id: 'all', name: '전체', icon: '🎵' },
     { id: 'popular', name: '인기 동요', icon: '🌟' },
-    { id: 'story', name: '동화 나라', icon: '📖' },
     { id: 'math', name: '수학 동요', icon: '🔢' },
     { id: 'english', name: '영어 동요', icon: '🅰️' },
 ];

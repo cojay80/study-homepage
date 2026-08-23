@@ -11,13 +11,15 @@ const VIDEOS = [
     { id: 'iXOAqCmoEFU', title: '바쁘다 바빠 멜라토닌', url: 'https://www.youtube.com/embed/iXOAqCmoEFU' },
     { id: 'NrL3rZsgLFQ', title: '안 나와 똥 (변비 비켜!)', url: 'https://www.youtube.com/embed/NrL3rZsgLFQ' },
     { id: 'YmSIIf7HGDo', title: '혈장 실종 사건', url: 'https://www.youtube.com/embed/YmSIIf7HGDo' },
-    { id: '_6_y_51-A2A', title: '꿀꺽이와 캬의 소원 (물 마시기)', url: 'https://www.youtube.com/embed/_6_y_51-A2A' },
     { id: 'x4XnuKZ33HA', title: '아몬드 공주와 비타민C', url: 'https://www.youtube.com/embed/x4XnuKZ33HA' },
     { id: 'iSa5_7ohwFw', title: '단짠단짠 전쟁', url: 'https://www.youtube.com/embed/iSa5_7ohwFw' },
     { id: 'Bzp86MhCdpA', title: '스트레스와 단 맛', url: 'https://www.youtube.com/embed/Bzp86MhCdpA' },
     { id: 'ibX_7aoMUPg', title: '가짜 호르몬 교란 작전', url: 'https://www.youtube.com/embed/ibX_7aoMUPg' },
     { id: 'NkvMKpXwznI', title: '토마토 최강 용사 리코펜', url: 'https://www.youtube.com/embed/NkvMKpXwznI' },
     { id: 'apNhlPLWzFM', title: '수분 사냥꾼 나트륨', url: 'https://www.youtube.com/embed/apNhlPLWzFM' },
+    { id: 'WyiMp-i6pH0', title: '아이스크림 식중독', url: 'https://www.youtube.com/embed/WyiMp-i6pH0' },
+    { id: 'ZS7U0Sy7bPk', title: '수두 이길 수 있어', url: 'https://www.youtube.com/embed/ZS7U0Sy7bPk' },
+    { id: '5eRx1nOsKAs', title: '똥 냄새의 진짜 주인은?', url: 'https://www.youtube.com/embed/5eRx1nOsKAs' },
 ];
 
 const VideoLand = () => {

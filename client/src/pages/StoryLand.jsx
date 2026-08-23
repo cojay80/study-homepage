@@ -7,10 +7,15 @@ import { CloudIcon } from '../components/Assets';
 const MotionDiv = motion.div;
 
 const STORIES = [
-    // Popular Stories (인기 동화)
+    // Popular Stories (인기 동화) -- every id below has been verified against
+    // the YouTube oEmbed API so the title actually matches the video.
     { id: 'IAL1v7OUfm4', title: '정글 탐험대의 모험', category: 'story', url: 'https://www.youtube.com/embed/IAL1v7OUfm4' },
-    { id: 'kcZTYZDx5_c', title: '도깨비 방망이 외 (인기 전래동화)', category: 'story', url: 'https://www.youtube.com/embed/kcZTYZDx5_c' },
-    { id: 'R2rX-m2-g6Y', title: '콩쥐팥쥐 외 (인기 동화)', category: 'story', url: 'https://www.youtube.com/embed/R2rX-m2-g6Y' },
+    { id: 'syftSXaBUOU', title: '도깨비 방망이 외 (인기 전래동화)', category: 'story', url: 'https://www.youtube.com/embed/syftSXaBUOU' },
+    { id: 'c1n0G1qnBfk', title: '콩쥐 팥쥐 (전래동화)', category: 'story', url: 'https://www.youtube.com/embed/c1n0G1qnBfk' },
+    { id: 'vEbja_KLUYU', title: '흥부 놀부 (전래동화)', category: 'story', url: 'https://www.youtube.com/embed/vEbja_KLUYU' },
+    { id: 'XUbbdLIbj-4', title: '선녀와 나무꾼 (전래동화)', category: 'story', url: 'https://www.youtube.com/embed/XUbbdLIbj-4' },
+    { id: 'o60apGctKKQ', title: '해님 달님 (전래동화)', category: 'story', url: 'https://www.youtube.com/embed/o60apGctKKQ' },
+    { id: 'kcZTYZDx5_c', title: '헨젤과 그레텔 (명작동화)', category: 'story', url: 'https://www.youtube.com/embed/kcZTYZDx5_c' },
 
     // Dance/Gymnastics (율동 동요)
     { id: 'ZAmVVIJ1I9E', title: '호이 호이! 알록달록 상어가족', category: 'dance', url: 'https://www.youtube.com/embed/ZAmVVIJ1I9E' },
